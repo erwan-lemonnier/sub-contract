@@ -1,0 +1,34 @@
+Sub::Contract
+=============
+
+Yet another contract module...
+Sub::Contract Lets you define contracts per 
+functions with a bit more flexibility than
+Class::Contract and Class::Agreement.
+
+See perldoc Sub::Contract for more information.
+
+INSTALLATION
+
+To install this module type the following:
+
+   perl Makefile.PL
+   make
+   make test
+   make install
+
+DEPENDENCIES
+
+This module requires these other modules and libraries:
+
+    TODO
+
+AUTHOR
+
+Erwan Lemonnier
+
+COPYRIGHT AND LICENCE
+
+See perldoc Sub::Contract
+
+

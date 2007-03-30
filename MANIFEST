@@ -1,0 +1,13 @@
+Changes
+Makefile.PL
+MANIFEST
+README
+lib/Sub/Contract.pm
+lib/Sub/Contract/Compiler.pm
+lib/Sub/Contract/Pool.pm
+lib/Sub/Contract/Memoizer.pm
+t/01_test_compile.t
+t/02_test_basic_contract.t
+t/03_test_invariant.t
+t/pod.t
+t/pod-coverage.t
