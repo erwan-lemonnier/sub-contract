@@ -2,7 +2,7 @@
 #
 #   Sub::Contract - Pseudo contract programming, and more
 #
-#   $Id: Contract.pm,v 1.1 2007-03-30 08:47:48 erwan_lemonnier Exp $
+#   $Id: Contract.pm,v 1.2 2007-03-30 08:58:29 erwan_lemonnier Exp $
 #
 #   070228 erwan Wrote API squeleton
 #
@@ -19,7 +19,6 @@ use Data::Dumper;
 use Symbol;
 use Sub::Contract::ArgValidator;
 use Sub::Contract::Pool;
-use Sub::Contract::Cache;
 
 # Add compiling and memoizing abilities through multiple inheritance, to keep code separate
 use base qw(Exporter Sub::Contract::Compiler Sub::Contract::Memoizer);
@@ -27,7 +26,7 @@ use base qw(Exporter Sub::Contract::Compiler Sub::Contract::Memoizer);
 our @EXPORT = qw();
 our @EXPORT_OK = qw(contract results);
 
-our $VERSION = '0.01';
+our $VERSION = '0.00';
 
 our $DEBUG = 1;
 
@@ -565,7 +564,7 @@ See 'Sub::Contract'.
 
 =head1 VERSION
 
-$Id: Contract.pm,v 1.1 2007-03-30 08:47:48 erwan_lemonnier Exp $
+$Id: Contract.pm,v 1.2 2007-03-30 08:58:29 erwan_lemonnier Exp $
 
 =head1 AUTHOR
 
