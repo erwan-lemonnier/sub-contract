@@ -1,6 +1,6 @@
 #-------------------------------------------------------------------
 #
-#   $Id: 04_test_pre_post_conditions.t,v 1.1 2007-03-30 08:38:49 erwan_lemonnier Exp $
+#   $Id: 04_test_pre_post_conditions.t,v 1.2 2007-03-30 11:13:59 erwan_lemonnier Exp $
 #
 #   070321 erwan Started
 #
@@ -61,7 +61,7 @@ eval {
 	->post(
 	       sub {
 		   croak "foo called in wrong context" if (!defined $Sub::Contract::wantarray || $Sub::Contract::wantarray != 1);
-		   my @res = @Sub::Contract::result;
+		   my @res = @Sub::Contract::results;
 		   return $res[0] == 1
 		   }
 	       )
