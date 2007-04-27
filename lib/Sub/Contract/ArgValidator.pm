@@ -1,7 +1,7 @@
 #
 #   Sub::Contract::ArgValidator - Validate input/result arguments
 #
-#   $Id: ArgValidator.pm,v 1.1 2007-03-30 08:47:49 erwan_lemonnier Exp $
+#   $Id: ArgValidator.pm,v 1.2 2007-04-27 12:46:29 erwan_lemonnier Exp $
 #
 #   070228 erwan Wrote API squeleton
 #
@@ -73,11 +73,25 @@ syntax to define fine grained constraints on the input and result
 arguments of a subroutine, as defined with the methods in() and out().
 
 An instance of Sub::Contract::Arg holds those constraints for
-either input or return arguments.
+either input arguments or return results.
 
 =head1 API
 
 See 'Sub::Contract'.
+
+=over 4
+
+=item new()
+
+=item add_list_check()
+
+=item add_hash_check()
+
+=item has_list_args()
+
+=item has_hash_args()
+
+=back
 
 =head1 SEE ALSO
 
@@ -85,20 +99,15 @@ See 'Sub::Contract'.
 
 =head1 VERSION
 
-$Id: ArgValidator.pm,v 1.1 2007-03-30 08:47:49 erwan_lemonnier Exp $
+$Id: ArgValidator.pm,v 1.2 2007-04-27 12:46:29 erwan_lemonnier Exp $
 
 =head1 AUTHOR
 
 Erwan Lemonnier C<< <erwan@cpan.org> >>
 
-=head1 COPYRIGHT AND LICENSE
+=head1 LICENSE
 
-This code is distributed under the same terms as Perl itself.
-
-=head1 DISCLAIMER OF WARRANTY
-
-This is free code and comes with no warranty. The author declines any personal
-responsibility regarding the use of this code or the consequences of its use.
+See Sub::Contract.
 
 =cut
 

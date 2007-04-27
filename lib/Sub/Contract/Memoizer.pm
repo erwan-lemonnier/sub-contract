@@ -2,7 +2,7 @@
 #
 #   Sub::Contract::Memoizer - Implement the memoizing behaviour of a contract
 #
-#   $Id: Memoizer.pm,v 1.1 2007-03-30 08:47:49 erwan_lemonnier Exp $
+#   $Id: Memoizer.pm,v 1.2 2007-04-27 12:46:29 erwan_lemonnier Exp $
 #
 #   070320 erwan First cast
 #
@@ -31,7 +31,7 @@ sub memoize {
     my ($self,%args) = @_;
     my $size = delete $args{size};
 
-    croak "cache() got unknown arguments: ".Dumper(%args) if (%args);
+    croak "memoize() got unknown arguments: ".Dumper(%args) if (%args);
 
     # TODO: ->reset should play well with memoize
 
@@ -81,26 +81,29 @@ in Sub::Contract::Memoizer.
 
 See 'Sub::Contract'.
 
+=over 4
+
+=item C<< memoize >>
+
+=item C<< flush_cache >>
+
+=back
+
 =head1 SEE ALSO
 
 See 'Sub::Contract'.
 
 =head1 VERSION
 
-$Id: Memoizer.pm,v 1.1 2007-03-30 08:47:49 erwan_lemonnier Exp $
+$Id: Memoizer.pm,v 1.2 2007-04-27 12:46:29 erwan_lemonnier Exp $
 
 =head1 AUTHOR
 
 Erwan Lemonnier C<< <erwan@cpan.org> >>
 
-=head1 COPYRIGHT AND LICENSE
+=head1 LICENSE
 
-This code is distributed under the same terms as Perl itself.
-
-=head1 DISCLAIMER OF WARRANTY
-
-This is free code and comes with no warranty. The author declines any personal
-responsibility regarding the use of this code or the consequences of its use.
+See Sub::Contract.
 
 =cut
 

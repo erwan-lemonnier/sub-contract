@@ -1,7 +1,7 @@
 #
 #   Sub::Contract::Pool - The pool of contracts
 #
-#   $Id: Pool.pm,v 1.1 2007-03-30 08:47:49 erwan_lemonnier Exp $
+#   $Id: Pool.pm,v 1.2 2007-04-27 12:46:29 erwan_lemonnier Exp $
 #
 #   070228 erwan Wrote API squeleton
 #
@@ -43,7 +43,7 @@ sub new {
 
 #---------------------------------------------------------------
 #
-#
+#   list_all_contracts - return all contracts registered in the pool
 #
 
 sub list_all_contracts {
@@ -53,8 +53,10 @@ sub list_all_contracts {
 
 #---------------------------------------------------------------
 #
+#   has_contract - 
 #
-#
+
+# TODO: should it be removed? to use find_contract instead?
 
 sub has_contract {
     my ($self, $contractor) = @_;
@@ -70,10 +72,10 @@ sub has_contract {
 
 #---------------------------------------------------------------
 #
-#
+#   _add_contract
 #
 
-sub add_contract {
+sub _add_contract {
     my ($self, $contract) = @_;
 
     croak "method add_contract() expects only 1 argument"
@@ -155,7 +157,31 @@ by Sub::Contract.
 
 Return the contract pool.
 
-=item C<< $pool-> >>
+=item C<< new() >>
+
+Pool constructor, for internal use only.
+DO NOT USE NEW, always use C<< get_contract_pool() >>.
+
+=item C<< $pool->list_all_contracts >>
+
+Return all contracts registered in the pool.
+
+=item C<< $pool->has_contract($fully_qualified_name) >>
+
+Return true if the subroutine identified by C<$fully_qualified_name>
+has a contract.
+
+=item C<< $pool->enable_all_contracts >>
+
+Enable all the contracts registered in the pool.
+
+=item C<< $pool->disable_all_contracts >>
+
+Disable all the contracts registered in the pool.
+
+=item C<< $pool->find_contract() >>
+
+TODO
 
 =back
 
@@ -165,20 +191,15 @@ See 'Sub::Contract'.
 
 =head1 VERSION
 
-$Id: Pool.pm,v 1.1 2007-03-30 08:47:49 erwan_lemonnier Exp $
+$Id: Pool.pm,v 1.2 2007-04-27 12:46:29 erwan_lemonnier Exp $
 
 =head1 AUTHOR
 
 Erwan Lemonnier C<< <erwan@cpan.org> >>
 
-=head1 COPYRIGHT AND LICENSE
+=head1 LICENSE
 
-This code is distributed under the same terms as Perl itself.
-
-=head1 DISCLAIMER OF WARRANTY
-
-This is free code and comes with no warranty. The author declines any personal
-responsibility regarding the use of this code or the consequences of its use.
+See Sub::Contract.
 
 =cut
 

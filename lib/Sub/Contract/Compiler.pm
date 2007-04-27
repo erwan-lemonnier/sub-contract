@@ -1,7 +1,7 @@
 #
 #   Sub::Contract::Compiler - Compile, enable and disable a contract
 #
-#   $Id: Compiler.pm,v 1.1 2007-03-30 08:47:49 erwan_lemonnier Exp $
+#   $Id: Compiler.pm,v 1.2 2007-04-27 12:46:29 erwan_lemonnier Exp $
 #
 #   070228 erwan Wrote API squeleton
 #
@@ -285,26 +285,31 @@ changes. Those methods are implemented in Sub::Contract::Compiler.
 
 See 'Sub::Contract'.
 
+=over 4
+
+=item enable()
+
+=item disable()
+
+=item is_enabled()
+
+=back
+
 =head1 SEE ALSO
 
 See 'Sub::Contract'.
 
 =head1 VERSION
 
-$Id: Compiler.pm,v 1.1 2007-03-30 08:47:49 erwan_lemonnier Exp $
+$Id: Compiler.pm,v 1.2 2007-04-27 12:46:29 erwan_lemonnier Exp $
 
 =head1 AUTHOR
 
 Erwan Lemonnier C<< <erwan@cpan.org> >>
 
-=head1 COPYRIGHT AND LICENSE
+=head1 LICENSE
 
-This code is distributed under the same terms as Perl itself.
-
-=head1 DISCLAIMER OF WARRANTY
-
-This is free code and comes with no warranty. The author declines any personal
-responsibility regarding the use of this code or the consequences of its use.
+See Sub::Contract.
 
 =cut
 
