@@ -1,7 +1,7 @@
 #
 #   Sub::Contract::Compiler - Compile, enable and disable a contract
 #
-#   $Id: Compiler.pm,v 1.2 2007-04-27 12:46:29 erwan_lemonnier Exp $
+#   $Id: Compiler.pm,v 1.3 2007-05-14 20:25:17 erwan_lemonnier Exp $
 #
 #   070228 erwan Wrote API squeleton
 #
@@ -58,7 +58,7 @@ sub enable {
 sub disable {
     my $self = shift;
     if ($self->{is_enabled}) {
-	print "disabling contract on ".$self->contractor."\n";
+	print "Sub::Contract: disabling contract on [".$self->contractor."]\n" if ($Sub::Contract::DEBUG);
 
 	# restore original sub
 	unwrap_subs $self->contractor;
@@ -248,7 +248,7 @@ sub _compile {
 	    }
     }, $str_code;
 
-    if ($Sub::Contract::DEBUG) {
+    if ($Sub::Contract::DEBUG > 1) {
 	print "Sub::Contract: wrapping this code $state [$contractor]:\n";
 	print "-------------------------------------------------------\n";
 	$str_code =~ s/^([\s\t]+)//gm;
@@ -301,7 +301,7 @@ See 'Sub::Contract'.
 
 =head1 VERSION
 
-$Id: Compiler.pm,v 1.2 2007-04-27 12:46:29 erwan_lemonnier Exp $
+$Id: Compiler.pm,v 1.3 2007-05-14 20:25:17 erwan_lemonnier Exp $
 
 =head1 AUTHOR
 

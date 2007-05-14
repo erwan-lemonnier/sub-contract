@@ -1,7 +1,7 @@
 #
 #   Sub::Contract::Pool - The pool of contracts
 #
-#   $Id: Pool.pm,v 1.2 2007-04-27 12:46:29 erwan_lemonnier Exp $
+#   $Id: Pool.pm,v 1.3 2007-05-14 20:25:17 erwan_lemonnier Exp $
 #
 #   070228 erwan Wrote API squeleton
 #
@@ -56,15 +56,17 @@ sub list_all_contracts {
 #   has_contract - 
 #
 
-# TODO: should it be removed? to use find_contract instead?
+# TODO: should it be removed? to use find_contract instead? would it be too slow?
 
 sub has_contract {
     my ($self, $contractor) = @_;
 
-    croak "method has_contract() expects only 1 argument"
-	if (scalar @_ != 2);
     croak "method has_contract() expects a fully qualified function name as argument"
-	if (!defined $contractor || ref $contractor ne '' || $contractor !~ /::/);
+	if ( scalar @_ != 2 || 
+	     !defined $contractor ||
+	     ref $contractor ne '' || 
+	     $contractor !~ /::/
+	);
 
     my $index = $self->_contract_index;
     return exists $index->{$contractor};
@@ -102,20 +104,45 @@ sub _add_contract {
 #
 ################################################################
 
-sub enable_all_contracts {}
-sub disable_all_contracts {}
-
-
-#sub list_contracts_in_package {}
-
-sub find_contract {
+sub enable_all_contracts {
     my $self = shift;
-    # accept package => $regexp
-    # accept function => $regexp
-    # accept fully_qualified_name => $regexp
+    map { $_->enable } $self->list_all_contracts; 
+}
 
-    # TODO: search contracts matching func/pkg name. name can be a regexp
-    # TODO: return a list of Sub::Contract objects
+sub disable_all_contracts {
+    my $self = shift;
+    map { $_->disable } $self->list_all_contracts; 
+}
+
+sub enable_contracts_matching {
+    my $self = shift;
+    map { $_->enable } $self->find_contracts_matching(@_);
+}
+
+sub disable_contracts_matching {
+    my $self = shift;
+    map { $_->disable } $self->find_contracts_matching(@_);
+}
+
+sub find_contracts_matching {
+    my $self = shift;
+    my $match = shift;
+    my @contracts;
+
+#    use Data::Dumper;
+#    print "caller is: ".Dumper();
+
+# TODO: fix croak level is called from enable/disable_matching
+#    local $Carp::CarpLevel = 2 if ((caller(1))[3] =~ /^Sub::Contract::Pool::(enable|disable)_contracts_matching$/);
+
+    croak "method find_contracts_matching() expects a regular expression"
+	if (scalar @_ != 0 || !defined $match || ref $match ne '');
+   
+    while ( my ($name,$contract) = each %{$self->_contract_index} ) {
+	push @contracts, $contract if ($name =~ /$match/);
+    }
+
+    return @contracts;
 }
 
 
@@ -179,8 +206,22 @@ Enable all the contracts registered in the pool.
 
 Disable all the contracts registered in the pool.
 
-=item C<< $pool->find_contract() >>
+=item C<< $pool->enable_contracts_matching($regexp) >>
 
+Enable all the contracts registered in the pool whose contractor's
+fully qualified names matches the string C<$regexp>. C<regexp> works
+as for C<find_contracts_matching>.
+
+=item C<< $pool->disable_contracts_matching($regexp) >>
+
+Disable all the contracts registered in the pool whose contractor's 
+fully qualified names matches the string C<$regexp>. C<regexp> works
+as for C<find_contracts_matching>.
+
+=item C<< $pool->find_contracts_matching($regexp) >>
+
+Find all the contracts registered in the pool and whose contractor's 
+fully qualified names matches the string C<$regexp>.
 TODO
 
 =back
@@ -191,7 +232,7 @@ See 'Sub::Contract'.
 
 =head1 VERSION
 
-$Id: Pool.pm,v 1.2 2007-04-27 12:46:29 erwan_lemonnier Exp $
+$Id: Pool.pm,v 1.3 2007-05-14 20:25:17 erwan_lemonnier Exp $
 
 =head1 AUTHOR
 

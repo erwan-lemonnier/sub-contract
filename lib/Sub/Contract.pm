@@ -2,7 +2,7 @@
 #
 #   Sub::Contract - Pseudo contract programming, and more
 #
-#   $Id: Contract.pm,v 1.3 2007-04-27 12:46:29 erwan_lemonnier Exp $
+#   $Id: Contract.pm,v 1.4 2007-05-14 20:25:17 erwan_lemonnier Exp $
 #
 #   070228 erwan Wrote API squeleton
 #
@@ -29,6 +29,7 @@ our @EXPORT_OK = qw(contract results);
 our $VERSION = '0.01';
 
 our $DEBUG = 1;
+#our $DEBUG = 0;
 
 my $pool = Sub::Contract::Pool::get_contract_pool();
 
@@ -648,7 +649,7 @@ See 'Issues with contract programming' under 'Discussion'.
 
 =head1 VERSION
 
-$Id: Contract.pm,v 1.3 2007-04-27 12:46:29 erwan_lemonnier Exp $
+$Id: Contract.pm,v 1.4 2007-05-14 20:25:17 erwan_lemonnier Exp $
 
 =head1 AUTHORS
 
