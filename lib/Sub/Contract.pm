@@ -2,7 +2,7 @@
 #
 #   Sub::Contract - Pseudo contract programming, and more
 #
-#   $Id: Contract.pm,v 1.4 2007-05-14 20:25:17 erwan_lemonnier Exp $
+#   $Id: Contract.pm,v 1.5 2007-06-25 08:11:27 erwan_lemonnier Exp $
 #
 #   070228 erwan Wrote API squeleton
 #
@@ -641,7 +641,7 @@ and C<< 'scalar' >> in scalar context:
 
 =head1 SEE ALSO
 
-See 'Sub::Contract'.
+See Carp::Datum, Class::Agreement, Class::Contract.
 
 =head1 BUGS
 
@@ -649,11 +649,11 @@ See 'Issues with contract programming' under 'Discussion'.
 
 =head1 VERSION
 
-$Id: Contract.pm,v 1.4 2007-05-14 20:25:17 erwan_lemonnier Exp $
+$Id: Contract.pm,v 1.5 2007-06-25 08:11:27 erwan_lemonnier Exp $
 
 =head1 AUTHORS
 
-Erwan Lemonnier C<< <erwan@cpan.org> >>, 
+Erwan Lemonnier C<< <erwan@cpan.org> >>,
 as part of the Pluto developer group at the Swedish Premium Pension Authority.
 
 =head1 LICENSE
