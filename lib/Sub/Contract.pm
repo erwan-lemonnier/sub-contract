@@ -1,14 +1,12 @@
 #-------------------------------------------------------------------
 #
-#   Sub::Contract - Pseudo contract programming, and more
+#   Sub::Contract - Programming by contract and result caching in one
 #
-#   $Id: Contract.pm,v 1.5 2007-06-25 08:11:27 erwan_lemonnier Exp $
+#   $Id: Contract.pm,v 1.6 2007-09-15 12:03:20 erwan_lemonnier Exp $
 #
 #   070228 erwan Wrote API squeleton
+#   070915 erwan Rewrote to use source filter instead of overriding subs
 #
-
-# TODO: different post conditions for undefined/scalar/array context?
-# TODO: a way to access the return value of the contractor?
 
 package Sub::Contract;
 
@@ -16,15 +14,14 @@ use strict;
 use warnings;
 use Carp qw(croak);
 use Data::Dumper;
-use Symbol;
-use Sub::Contract::ArgValidator;
 use Sub::Contract::Pool;
+use Sub::Contract::Compiler;
+use Sub::Contract::Memoizer;
 
-# Add compiling and memoizing abilities through multiple inheritance, to keep code separate
-use base qw(Exporter Sub::Contract::Compiler Sub::Contract::Memoizer);
+use base qw(Exporter);
 
 our @EXPORT = qw();
-our @EXPORT_OK = qw(contract results);
+our @EXPORT_OK = qw(contract);
 
 our $VERSION = '0.01';
 
@@ -33,23 +30,30 @@ our $DEBUG = 1;
 
 my $pool = Sub::Contract::Pool::get_contract_pool();
 
-# the argument list passed to the contractor
-local @Sub::Contract::args;
-local $Sub::Contract::wantarray;
-local @Sub::Contract::results;
+# key='pkg::subname'. if key exists, sub has been parsed by source
+# filter in package pkg
+my $subs_per_pkg = {};
 
-#---------------------------------------------------------------
+################################################################
 #
-#   results - return @Sub::Contract::result, to be called from contract code
 #
+#    Source filter
+#
+#    - keep track of declared subs in each calling package
+#    - add calls to contract validation code to 'sub {' and 'return'
+#      for all subs having a contract
+#
+################################################################
 
-sub results {
-    return @Sub::Contract::results;
+sub import {
+  my $sf = new Sub::Contract::SourceFilter(caller);
+  filter_add($sf);
 }
 
+
 #---------------------------------------------------------------
 #
-#   contract - the class api part
+#   contract - declare a contract
 #
 
 sub contract {
@@ -210,7 +214,7 @@ sub post { return _set_pre_post('post',@_); }
 #---------------------------------------------------------------
 #
 #   invariant - adds an invariant condition
-#
+e#
 
 sub invariant {
     my ($self,$subref) = @_;
@@ -649,7 +653,7 @@ See 'Issues with contract programming' under 'Discussion'.
 
 =head1 VERSION
 
-$Id: Contract.pm,v 1.5 2007-06-25 08:11:27 erwan_lemonnier Exp $
+$Id: Contract.pm,v 1.6 2007-09-15 12:03:20 erwan_lemonnier Exp $
 
 =head1 AUTHORS
 
