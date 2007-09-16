@@ -1,7 +1,7 @@
 #
 #   Sub::Contract::Pool - The pool of contracts
 #
-#   $Id: Pool.pm,v 1.3 2007-05-14 20:25:17 erwan_lemonnier Exp $
+#   $Id: Pool.pm,v 1.4 2007-09-16 11:48:06 erwan_lemonnier Exp $
 #
 #   070228 erwan Wrote API squeleton
 #
@@ -19,7 +19,7 @@ use accessors qw( _contract_index
 use base qw(Exporter);
 
 our @EXPORT = ();
-our @EXPORT_OK = ('get_contract_pool');
+our @EXPORT_OK = ('get_pool');
 
 #---------------------------------------------------------------
 #
@@ -28,7 +28,7 @@ our @EXPORT_OK = ('get_contract_pool');
 
 my $pool;
 
-sub get_contract_pool {
+sub get_pool {
     if (!defined $pool) {
 	$pool = bless({},__PACKAGE__);
 	$pool->_contract_index({});
@@ -232,7 +232,7 @@ See 'Sub::Contract'.
 
 =head1 VERSION
 
-$Id: Pool.pm,v 1.3 2007-05-14 20:25:17 erwan_lemonnier Exp $
+$Id: Pool.pm,v 1.4 2007-09-16 11:48:06 erwan_lemonnier Exp $
 
 =head1 AUTHOR
 

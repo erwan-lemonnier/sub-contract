@@ -1,7 +1,7 @@
 #
 #   Sub::Contract::SourceFilter - Implement Sub::Contract's source filter
 #
-#   $Id: SourceFilter.pm,v 1.1 2007-09-15 12:03:21 erwan_lemonnier Exp $
+#   $Id: SourceFilter.pm,v 1.2 2007-09-16 11:48:06 erwan_lemonnier Exp $
 #
 #   070915 erwan Started
 #
@@ -12,6 +12,7 @@ use strict;
 use warnings;
 use Carp qw(croak);
 use Data::Dumper;
+use Filter::Util::Call;
 use Sub::Contract::Pool qw(get_pool);
 
 use accessors ('pkg',                  # package currently source filtered	       
@@ -25,6 +26,17 @@ my $pool = Sub::Contract::Pool::get_pool();
 # filter in package pkg
 my $subs_per_pkg = {};
 
+################################################################
+#
+#
+#    Source filter
+#
+#    - keep track of declared subs in each calling package
+#    - add calls to contract validation code to 'sub {' and 'return'
+#      for all subs having a contract
+#
+################################################################
+
 #---------------------------------------------------------------
 #
 #   new - constructor
@@ -32,20 +44,23 @@ my $subs_per_pkg = {};
 
 sub new {
   my ($class,$caller) = @_;
-  $class = ref $class || $class;
 
   croak "BUG: no caller provided" if (!defined $caller);
 
-  my $self = bless({},$class);
+  print "# initializing source filter for caller [$caller]\n" if ($Sub::Contract::DEBUG);
+
+  my $self = bless({},__PACKAGE__);
   $self->pkg($caller);
   $self->cursub_has_contract(0);
+
+  filter_add($self);
 
   return $self;
 }
 
 #---------------------------------------------------------------
 #
-#   new - constructor
+#   filter - filter each line of the source file
 #
 
 sub filter {
@@ -55,12 +70,14 @@ sub filter {
 
   return $status if ($status < 0);
 
+  print "# filtering ".$self->pkg.", line: $line" if ($Sub::Contract::DEBUG > 1);
+
   # TODO: keep track of { } to identify the end of a sub?
   # for the moment a sub starts with 'sub word {' and ends at the next 'sub word {'
 
   # keep track of sub declarations
   if ($line =~ /sub (\w+) {/) {
-    my $subname = $pkg."::".$1;
+    my $subname = $self->pkg."::".$1;
     $subname =~ s/::/_/gm;
     $self->cursub_name($subname);
     
@@ -77,13 +94,15 @@ sub filter {
 
   # replace 'return' with 'return Sub::Contract::Pool::validate_<package>_<subname>' 
   if ($line =~ /\W+return [\$\&\@\%]/ && $self->cursub_has_contract) {
+    my $subname = $self->cursub_name;
     $line =~ s/return/return Sub::Contract::Pool::validate_out_$subname/
   }
 
-  
+  $_ = $line;
+
+  print "# into: $_" if ($Sub::Contract::DEBUG > 1);
+
   return $status;
-
-
 }
 
 1;
@@ -131,7 +150,7 @@ See 'Sub::Contract'.
 
 =head1 VERSION
 
-$Id: SourceFilter.pm,v 1.1 2007-09-15 12:03:21 erwan_lemonnier Exp $
+$Id: SourceFilter.pm,v 1.2 2007-09-16 11:48:06 erwan_lemonnier Exp $
 
 =head1 AUTHOR
 

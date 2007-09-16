@@ -2,7 +2,7 @@
 #
 #   Sub::Contract - Programming by contract and result caching in one
 #
-#   $Id: Contract.pm,v 1.6 2007-09-15 12:03:20 erwan_lemonnier Exp $
+#   $Id: Contract.pm,v 1.7 2007-09-16 11:48:05 erwan_lemonnier Exp $
 #
 #   070228 erwan Wrote API squeleton
 #   070915 erwan Rewrote to use source filter instead of overriding subs
@@ -14,9 +14,8 @@ use strict;
 use warnings;
 use Carp qw(croak);
 use Data::Dumper;
-use Sub::Contract::Pool;
-use Sub::Contract::Compiler;
-use Sub::Contract::Memoizer;
+use Sub::Contract::Pool qw(get_pool);
+use Sub::Contract::SourceFilter qw(initialize_filter);
 
 use base qw(Exporter);
 
@@ -25,31 +24,19 @@ our @EXPORT_OK = qw(contract);
 
 our $VERSION = '0.01';
 
-our $DEBUG = 1;
+our $DEBUG = 2;
 #our $DEBUG = 0;
 
-my $pool = Sub::Contract::Pool::get_contract_pool();
+my $pool = Sub::Contract::Pool::get_pool();
 
-# key='pkg::subname'. if key exists, sub has been parsed by source
-# filter in package pkg
-my $subs_per_pkg = {};
-
-################################################################
+#---------------------------------------------------------------
 #
+#   start source filter when used
 #
-#    Source filter
-#
-#    - keep track of declared subs in each calling package
-#    - add calls to contract validation code to 'sub {' and 'return'
-#      for all subs having a contract
-#
-################################################################
 
 sub import {
-  my $sf = new Sub::Contract::SourceFilter(caller);
-  filter_add($sf);
+  new Sub::Contract::SourceFilter(caller);
 }
-
 
 #---------------------------------------------------------------
 #
@@ -214,7 +201,7 @@ sub post { return _set_pre_post('post',@_); }
 #---------------------------------------------------------------
 #
 #   invariant - adds an invariant condition
-e#
+#
 
 sub invariant {
     my ($self,$subref) = @_;
@@ -653,7 +640,7 @@ See 'Issues with contract programming' under 'Discussion'.
 
 =head1 VERSION
 
-$Id: Contract.pm,v 1.6 2007-09-15 12:03:20 erwan_lemonnier Exp $
+$Id: Contract.pm,v 1.7 2007-09-16 11:48:05 erwan_lemonnier Exp $
 
 =head1 AUTHORS
 
