@@ -1,6 +1,6 @@
 #-------------------------------------------------------------------
 #
-#   $Id: 01_test_compile.t,v 1.1 2007-03-30 08:38:49 erwan_lemonnier Exp $
+#   $Id: 01_test_compile.t,v 1.2 2007-09-21 00:18:14 erwan_lemonnier Exp $
 #
 #   070314 erwan Started
 #
@@ -13,9 +13,11 @@ use Test::More;
 BEGIN {
 
     use check_requirements;
-    plan tests => 5;
+    plan tests => 7;
 
+    use_ok("Sub::Contract::Debug");
     use_ok("Sub::Contract::Pool");
+    use_ok("Sub::Contract::SourceFilter");
     use_ok("Sub::Contract::ArgValidator");
     use_ok("Sub::Contract::Memoizer");
     use_ok("Sub::Contract::Compiler");
