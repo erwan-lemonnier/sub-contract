@@ -2,7 +2,7 @@
 #
 #   Sub::Contract - Programming by contract and result caching in one
 #
-#   $Id: Contract.pm,v 1.8 2007-09-21 00:19:11 erwan_lemonnier Exp $
+#   $Id: Contract.pm,v 1.9 2007-09-21 14:14:59 erwan_lemonnier Exp $
 #
 #   070228 erwan Wrote API squeleton
 #   070915 erwan Rewrote to use source filter instead of overriding subs
@@ -12,7 +12,7 @@ package Sub::Contract;
 
 use strict;
 use warnings;
-use Carp qw(croak);
+use Carp qw(croak confess);
 use Data::Dumper;
 use Sub::Contract::Debug qw(debug);
 use Sub::Contract::Pool qw(get_pool);
@@ -33,7 +33,7 @@ my $pool = Sub::Contract::Pool::get_pool();
 #
 
 sub import {
-  new Sub::Contract::SourceFilter(caller);
+  new Sub::Contract::SourceFilter;
 }
 
 #---------------------------------------------------------------
@@ -638,7 +638,7 @@ See 'Issues with contract programming' under 'Discussion'.
 
 =head1 VERSION
 
-$Id: Contract.pm,v 1.8 2007-09-21 00:19:11 erwan_lemonnier Exp $
+$Id: Contract.pm,v 1.9 2007-09-21 14:14:59 erwan_lemonnier Exp $
 
 =head1 AUTHORS
 
