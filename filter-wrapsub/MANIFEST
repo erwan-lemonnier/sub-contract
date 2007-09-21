@@ -1,0 +1,10 @@
+Changes
+lib/Filter/WrapSub.pm
+Makefile.PL
+MANIFEST
+README
+t/01_test_compile.t
+t/02_test_basic_contract.t
+t/check_requirements.pm
+t/pod-coverage.t
+t/pod.t
