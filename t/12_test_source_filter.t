@@ -1,6 +1,6 @@
 #-------------------------------------------------------------------
 #
-#   $Id: 12_test_source_filter.t,v 1.1 2007-09-21 00:16:47 erwan_lemonnier Exp $
+#   $Id: 12_test_source_filter.t,v 1.2 2007-09-21 14:15:23 erwan_lemonnier Exp $
 #
 #   070921 erwan Started
 #
@@ -33,28 +33,27 @@ sub test_filter {
     no strict 'refs';
     no warnings 'redefine';
 
-    *{ "Sub::Contract::SourceFilter::filter_add" } = sub ($) {};
+    *{ "Sub::Contract::SourceFilter::filter_add" } =
+	sub {};
 #    *{ "Sub::Contract::SourceFilter::filter_add" } = sub {};
 
     my $filter = new Sub::Contract::SourceFilter('pkg1');
     my $line;
-    
-    *{ "Sub::Contract::SourceFilter::filter_read" } = sub (;$) {
-#    *{ "Sub::Contract::SourceFilter::filter_read" } = sub {
-	print "filter_read called. returning [$line]\n";
-	return 0 if (!defined $line);
-	$_ = $line; 
-	return 1;
-    };
+
+    *{ "Sub::Contract::SourceFilter::filter_read" } =
+	sub { $_ = $in; return 0; }
+
+    $filter->filter();
 
     use strict 'refs';
     use warnings 'redefine';
 
-    for my $l (split(/\n/,$in)) {
-	$line = $l;
-	print "line is [$line]\n";
-	$filter->filter();
-    }
+#    for my $l (split(/\n/,$in)) {
+#	$line = $l;
+#	print "line is [$line]\n";
+    $line = $in;
+
+#    }
 
     $line = undef;
     $filter->filter();
