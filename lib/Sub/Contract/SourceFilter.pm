@@ -1,7 +1,7 @@
 #
 #   Sub::Contract::SourceFilter - Implement Sub::Contract's source filter
 #
-#   $Id: SourceFilter.pm,v 1.2 2007-09-16 11:48:06 erwan_lemonnier Exp $
+#   $Id: SourceFilter.pm,v 1.3 2007-09-21 00:17:46 erwan_lemonnier Exp $
 #
 #   070915 erwan Started
 #
@@ -14,6 +14,7 @@ use Carp qw(croak);
 use Data::Dumper;
 use Filter::Util::Call;
 use Sub::Contract::Pool qw(get_pool);
+use Sub::Contract::Debug qw(debug);
 
 use accessors ('pkg',                  # package currently source filtered	       
 	       'cursub_has_contract',  # the current sub is or not contracted
@@ -47,7 +48,7 @@ sub new {
 
   croak "BUG: no caller provided" if (!defined $caller);
 
-  print "# initializing source filter for caller [$caller]\n" if ($Sub::Contract::DEBUG);
+  debug(1,"initializing source filter for caller [$caller]");
 
   my $self = bless({},__PACKAGE__);
   $self->pkg($caller);
@@ -70,7 +71,7 @@ sub filter {
 
   return $status if ($status < 0);
 
-  print "# filtering ".$self->pkg.", line: $line" if ($Sub::Contract::DEBUG > 1);
+  debug(2,"filtering ".$self->pkg.", line: $line");
 
   # TODO: keep track of { } to identify the end of a sub?
   # for the moment a sub starts with 'sub word {' and ends at the next 'sub word {'
@@ -100,7 +101,7 @@ sub filter {
 
   $_ = $line;
 
-  print "# into: $_" if ($Sub::Contract::DEBUG > 1);
+  debug(2,"into: $_");
 
   return $status;
 }
@@ -150,7 +151,7 @@ See 'Sub::Contract'.
 
 =head1 VERSION
 
-$Id: SourceFilter.pm,v 1.2 2007-09-16 11:48:06 erwan_lemonnier Exp $
+$Id: SourceFilter.pm,v 1.3 2007-09-21 00:17:46 erwan_lemonnier Exp $
 
 =head1 AUTHOR
 
