@@ -2,7 +2,7 @@
 #
 #   Filter::WrapSub - Wrap a sub with code at compile time
 #
-#   $Id: WrapSubs.pm,v 1.2 2007-09-28 14:22:31 erwan_lemonnier Exp $
+#   $Id: WrapSubs.pm,v 1.3 2007-09-28 15:15:54 erwan_lemonnier Exp $
 #
 #   070921 erwan Laying foundations
 #
@@ -46,6 +46,7 @@ sub new {
   my $self = bless({},$class);
   $self->pkg($caller);
   $self->{verbose} = $verbose;
+  $self->_call_on_return([]);
 
   filter_add($self);
 
@@ -138,46 +139,57 @@ sub filter {
 	    $brace->set_content($code_bottom."; }");
 	}
 
-# 	    # add code at the begining and the end of the sub
-# 	    my @children = $subdef->children;
+	# now look at return statements
+	my $code_return = $self->_get_code('insert_before_return');
 
-# 	    if (scalar @children == 0) {
-# 		# empty sub declaration: 'sub {}'
-# 		$subdef->add_element($code_top) if ($code_top);
-# 		$subdef->add_element($code_bottom) if ($code_bottom);
-# 	    } else {
-# 		$children[0]->insert_before($code_top) if ($code_top);
-# 		$children[-1]->insert_before($code_bottom) if ($code_bottom);
-# 	    }
-# 	}
+	my $words = $subdef->find('PPI::Token::Word');
+	if (ref $words ne 'ARRAY') {
+	    # 'return' does not occur in the body of this sub
+	} else {
+	    foreach my $word (@$words) {
+		if ($word->content eq 'return') {
 
+		    # insert code before return
+		    if ($code_return) {
+			$word->set_content($code_return."; return");
+		    }
 
-# 	#
-# 	# step 3: alter 'return' statements
-# 	#
-#
-# 	foreach my $word (@{ $subdef->find('PPI::Token::Word') }) {
-# 	    if ($word->content eq 'return') {
-#
-# 		# this word is 'return'
-# 		my $ret_start = $word;
-#
-# 		do {
-# 		    $word = $word->next_sibling;
-# 		} until (ref $word eq '' || ($word->isa('PPI::Token::Structure') && $word->content eq ';') );
-#
-# 		my $ret_end = $word;
-#
-# 		if (ref $ret_end eq "") {
-# 		    # there was no ';' after return...
-# 		    $ret_start->set_content("return Sub::Contract::Pool::_validate_".$self->subname."_out()");
-# 		} else {
-# 		    # this word is ';' after the variables following 'return'
-# 		    $ret_start->set_content("return Sub::Contract::Pool::_validate_".$self->subname."_out(");
-# 		    $ret_end->set_content(");");
-# 		}
-# 	    }
-# 	}
+		    # alter return call
+		    if ($self->call_on_return) {
+
+			# which function should we call?
+			my $code_return = $self->_get_code('call_on_return');
+
+			# prepend arguments to the call arguments
+			my (undef,@args) = $self->call_on_return;
+			$code_return .= "(".join(",",@args);
+
+			# now we want to find the end of return's argument list,
+			# and append a ')' there
+
+			my $ret_start = $word;
+			do {
+			    $word = $word->next_sibling;
+			} until (ref $word eq '' || ($word->isa('PPI::Token::Structure') && $word->content eq ';') );
+
+			my $ret_end = $word;
+
+			# TODO: bug here. what if 'return 1 }'?
+
+			# the following probably doesn't work
+			if (ref $ret_end eq "") {
+			    # there was no ';' after return. we probably got smtg like 'return $a }'
+			    # so we just append ')' replace 'return' with 'return $code_return(@args)'
+			    $ret_start->set_content("return ".$code_return."(".join(",",@args).")");
+			} else {
+			    # this word is ';' after the variables following 'return'
+			    $ret_start->set_content("return ".$code_return."(".join(",",@args));
+			    $ret_end->set_content(");");
+			}
+		    }
+		}
+	    }
+	}
     }
 
     # serialize back the modified source tree
@@ -252,11 +264,21 @@ sub _get_code {
     my ($self,$action) = @_;
     $self->action($action);
 
-    my $code = $self->$action();
-    if (ref $code eq "CODE") {
-	# run code
+    my ($code,@args);
+
+    if ($action =~ /call_on_return/) {
+	($code,@args) = $self->call_on_return();
+    } else {
+	$code = $self->$action();
+    }
+
+    if (!defined $code) {
+	return undef;
+    } elsif (ref $code eq "CODE") {
+	# TODO: run coderef to generate inserted code
 	die;
     } else {
+	# code is a string
 	return $code;
     }
 }
@@ -507,7 +529,7 @@ See PPI. Otherwise, report to the author!
 
 =head1 VERSION
 
-$Id: WrapSubs.pm,v 1.2 2007-09-28 14:22:31 erwan_lemonnier Exp $
+$Id: WrapSubs.pm,v 1.3 2007-09-28 15:15:54 erwan_lemonnier Exp $
 
 =head1 AUTHORS
 

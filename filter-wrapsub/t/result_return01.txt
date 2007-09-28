@@ -1,0 +1,56 @@
+use Carp qw(confess);
+
+# return nothing
+sub foo_nop1 {
+    print "bob!\n"; return
+}
+
+sub foo_nop2 { print "bob!\n"; return }
+
+sub foo_nop3 {
+    print "bob!\n"; return;
+}
+
+sub foo_nop4 { print "bob!\n"; return; }
+
+# return scalars
+sub foo_scalar1 {
+    print "bob!\n"; return 1;
+}
+
+sub foo_scalar2 { print "bob!\n"; return 1; }
+
+sub foo_scalar3 {
+    print "bob!\n"; return $a;
+}
+
+sub foo_scalar4 { print "bob!\n"; return $a; }
+
+# return lists
+sub foo_list1 {
+    print "bob!\n"; return ()
+}
+
+sub foo_list2 { print "bob!\n"; return () }
+
+sub foo_list3 {
+    print "bob!\n"; return (1);
+}
+
+sub foo_list4 { print "bob!\n"; return (1); }
+
+sub foo_list5 {
+    print "bob!\n"; return (1,2,$a);
+}
+
+sub foo_list6 { print "bob!\n"; return (1,2,$a); }
+
+# return hash
+
+# return array ref
+
+# return complex structure
+
+# return anonymous sub
+
+
