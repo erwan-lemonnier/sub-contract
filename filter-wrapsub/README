@@ -1,9 +1,9 @@
-Filter::WrapSub
-===============
+Filter::WrapSubs
+================
 
-Wrap a sub with code at compile time.
+Wrap all subs in a package with code, at compile time.
 
-See perldoc Filter::WrapSub for more information.
+See perldoc Filter::WrapSubs for more information.
 
 INSTALLATION
 

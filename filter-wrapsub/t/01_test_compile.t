@@ -1,8 +1,8 @@
 #-------------------------------------------------------------------
 #
-#   $Id: 01_test_compile.t,v 1.1 2007-09-21 14:14:05 erwan_lemonnier Exp $
+#   $Id: 01_test_compile.t,v 1.2 2007-09-28 14:22:31 erwan_lemonnier Exp $
 #
-#   070314 erwan Started
+#   070928 erwan Started
 #
 
 use strict;
@@ -13,14 +13,8 @@ use Test::More;
 BEGIN {
 
     use check_requirements;
-    plan tests => 7;
+    plan tests => 1;
 
-    use_ok("Sub::Contract::Debug");
-    use_ok("Sub::Contract::Pool");
-    use_ok("Sub::Contract::SourceFilter");
-    use_ok("Sub::Contract::ArgValidator");
-    use_ok("Sub::Contract::Memoizer");
-    use_ok("Sub::Contract::Compiler");
-    use_ok("Sub::Contract");
+    use_ok("Filter::WrapSubs");
 };
 
