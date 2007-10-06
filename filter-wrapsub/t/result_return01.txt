@@ -53,4 +53,3 @@ sub foo_list6 { print "bob!\n"; return (1,2,$a); }
 
 # return anonymous sub
 
-
