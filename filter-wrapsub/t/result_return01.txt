@@ -46,10 +46,85 @@ sub foo_list5 {
 sub foo_list6 { print "bob!\n"; return (1,2,$a); }
 
 # return hash
+sub foo_hash1 {
+    print "bob!\n"; return (a => 1, b=> 2);
+}
+
+sub foo_hash2 { print "bob!\n"; return (a => 1, b=> 2) }
+
+sub foo_hash3 {
+    print "bob!\n"; return (a => 1, b=> 2);
+}
+
+sub foo_hash4 { print "bob!\n"; return (a => 1, b=> 2); }
 
 # return array ref
+sub foo_aref1 {
+    # blabla
+    print "bob!\n"; return [ a => 1, b=> 2 ];
+}
+
+sub foo_aref2 { print "bob!\n"; return [ a => 1, b=> 2 ]; }
+
+sub foo_aref3 {
+    my $a = shift @_;
+    print "bob!\n"; return [ a => $a, b=> 2 ];
+}
+
+sub foo_aref4 { print "bob!\n"; return [ a => 1, b=> 2 ]; }
+
+# return hash ref
+sub foo_href1 {
+    # blabla
+    print "bob!\n"; return { a => 1, b=> 2 };
+}
+
+sub foo_href2 { print "bob!\n"; return { a => 1, b=> 2 }; }
+
+sub foo_href3 {
+    my $a = shift @_;
+    print "bob!\n"; return { a => $a, b=> 2 };
+}
+
+sub foo_href4 { print "bob!\n"; return { a => 1, b=> 2 }; }
 
 # return complex structure
+sub foo_struct1 {
+    print "bob!\n"; return { a => [1,2,3],
+	     b => sub { 1; },
+	     c => "bof"
+    }
+}
+
+sub foo_struct2 { print "bob!\n"; return  { a => [1,2,3], b => sub { 1; }, c => "bof" }
+}
+
+sub foo_struct3 {
+    print "bob!\n"; return [ 'a',
+	     { c => [1,2,3], d => 4,
+	       b => "akdjh"},
+	     sub { print "foo" }
+	];
+}
+
+sub foo_struct4 { print "bob!\n"; return  { a => [1,2,3], b => sub { 1; }, c => "bof" }; }
 
 # return anonymous sub
 
+sub foo_sref1 {
+    print "bob!\n"; return sub { print "whatever" }
+}
+
+sub foo_sref2 { print "bob!\n"; return sub { print "whatever" } }
+
+sub foo_sref3 {
+    print "bob!\n"; return sub { print "whatever";
+		 my $a = 1;
+		 print "bob!\n"; return $a++;
+    };
+}
+
+sub foo_sref4 { print "bob!\n"; return sub {
+    my $a = 1;
+    print "bob!\n"; return $a++;
+		}; }
