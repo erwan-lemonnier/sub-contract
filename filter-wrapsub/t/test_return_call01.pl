@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 use lib "../lib/", "t/", "lib/", ".";
-use MyFilterReturn01;
+use MyFilterReturnCall01;
 use Carp qw(confess);
 
 # return nothing
@@ -132,18 +132,3 @@ sub foo_sref4 { return sub {
     my $a = 1;
     return $a++;
 		}; }
-
-# multiple returns
-sub foo_multi {
-    my $a = shift;
-    return if ($a == 0);
-    return (1,2,3) 
-	if ($a == 2);
-    if ($a eq "bob") {
-	return sub { print "bob" };
-    } else {
-	while (1) {
-	    return 0;
-	}
-    }
-}
