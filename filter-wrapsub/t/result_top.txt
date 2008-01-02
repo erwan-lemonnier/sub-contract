@@ -1,0 +1,30 @@
+use Carp qw(confess);
+
+# blabla
+sub foo { print "start!\n"; 
+    my $l = "just some test";
+    my $a = sub { 1; };
+    1;
+}
+
+sub bar { print "start!\n"; }
+
+sub toto ($) { print "start!\n"; 
+    my $bob = shift;
+
+    if ($bob) {
+    return "blob";
+    } else {
+        if (1) {
+            return sub { "bib!" };
+        }
+    }
+
+    return
+}
+
+foo();
+
+my $a = 2;
+$a++;
+start!

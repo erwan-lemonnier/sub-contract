@@ -1,6 +1,6 @@
 #-------------------------------------------------------------------
 #
-#   $Id: 02_test_wrapsubs.t,v 1.3 2007-10-06 06:08:28 erwan_lemonnier Exp $
+#   $Id: 02_test_wrapsubs.t,v 1.4 2008-01-02 12:36:34 erwan_lemonnier Exp $
 #
 #   070928 erwan Started
 #
@@ -17,8 +17,11 @@ BEGIN {
 
 # test files to filter
 my @TESTS = (
-	     'test01.pl' => 'result01.txt',
-	     'test_return01.pl' => 'result_return01.txt',
+	     'test_top.pl'    => 'result_top.txt',
+	     'test_bottom.pl' => 'result_bottom.txt',
+	     'test_top_bottom.pl' => 'result_top_bottom.txt',
+#	     'test_after_01.pl'  => 'result_after_01.txt',
+#	     'test_return01.pl' => 'result_return01.txt',
 	     );
 
 # where are we running from?
