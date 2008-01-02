@@ -1,6 +1,6 @@
 #-------------------------------------------------------------------
 #
-#   $Id: 01_test_compile.t,v 1.2 2007-09-21 00:18:14 erwan_lemonnier Exp $
+#   $Id: 01_test_compile.t,v 1.3 2008-01-02 14:11:21 erwan_lemonnier Exp $
 #
 #   070314 erwan Started
 #
@@ -18,7 +18,7 @@ BEGIN {
     use_ok("Sub::Contract::Debug");
     use_ok("Sub::Contract::Pool");
     use_ok("Sub::Contract::SourceFilter");
-    use_ok("Sub::Contract::ArgValidator");
+    use_ok("Sub::Contract::ArgumentChecks");
     use_ok("Sub::Contract::Memoizer");
     use_ok("Sub::Contract::Compiler");
     use_ok("Sub::Contract");
