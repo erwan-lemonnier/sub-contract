@@ -1,6 +1,6 @@
 #-------------------------------------------------------------------
 #
-#   $Id: 02_test_basic_contract.t,v 1.1 2007-03-30 08:38:49 erwan_lemonnier Exp $
+#   $Id: 02_test_basic_contract.t,v 1.2 2008-01-02 14:38:39 erwan_lemonnier Exp $
 #
 #   070314 erwan Started
 #
@@ -19,7 +19,7 @@ use Sub::Contract qw(contract);
 
 sub foo { return 'test'; };
 
-sub do_contract {
+sub get_contract {
     return contract('foo');
 }
 
@@ -42,7 +42,7 @@ BEGIN {
     plan tests => 24;
 
     use_ok("Sub::Contract",'contract');
-    use_ok("Sub::Contract::Pool",'get_contract_pool');
+    use_ok("Sub::Contract::Pool",'get_pool');
 };
 
 my $value;
@@ -51,7 +51,7 @@ sub foo { return $value; }
 my $c1 = contract('foo');
 
 # test that the contract pool now contains all those contracts
-my $pool = get_contract_pool();
+my $pool = get_pool();
 is(ref $pool, 'Sub::Contract::Pool', "check got a contract pool");
 
 my @all = $pool->list_all_contracts();
@@ -86,7 +86,7 @@ my $c4 = Sub::Contract->new('foo4', caller => 'main');
 is_deeply($c1,$c4,"Sub::Contract->new() returns same as contract() when caller specified");
 
 $c1->{contractor} = 'My::Test::foo';
-is_deeply($c1,My::Test::do_contract,"same when called from another package than main::");
+is_deeply($c1,My::Test::get_contract,"same when called from another package than main::");
 
 #$c1->_contractor('');
 $c1->{contractor} = 'My::Test::foo2';

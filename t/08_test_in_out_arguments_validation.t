@@ -1,6 +1,6 @@
 #-------------------------------------------------------------------
 #
-#   $Id: 08_test_in_out_arguments_validation.t,v 1.1 2007-03-30 08:38:50 erwan_lemonnier Exp $
+#   $Id: 08_test_in_out_arguments_validation.t,v 1.2 2008-01-02 14:38:39 erwan_lemonnier Exp $
 #
 #   070314 erwan Started
 #
@@ -17,7 +17,7 @@ BEGIN {
     plan tests => 104;
 
     use_ok("Sub::Contract",'contract');
-    use_ok("Sub::Contract::Pool",'get_contract_pool');
+    use_ok("Sub::Contract::Pool");
 };
 
 sub foo { 1 }
