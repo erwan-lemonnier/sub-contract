@@ -2,10 +2,11 @@
 #
 #   Sub::Contract - Programming by contract and result caching in one
 #
-#   $Id: Contract.pm,v 1.9 2007-09-21 14:14:59 erwan_lemonnier Exp $
+#   $Id: Contract.pm,v 1.10 2008-01-02 14:12:13 erwan_lemonnier Exp $
 #
 #   070228 erwan Wrote API squeleton
 #   070915 erwan Rewrote to use source filter instead of overriding subs
+#   080102 erwan Using a source filter was a dead end. Backing to compiler use
 #
 
 package Sub::Contract;
@@ -14,11 +15,15 @@ use strict;
 use warnings;
 use Carp qw(croak confess);
 use Data::Dumper;
+use Sub::Contract::ArgumentChecks;
 use Sub::Contract::Debug qw(debug);
 use Sub::Contract::Pool qw(get_pool);
-use Sub::Contract::SourceFilter qw(initialize_filter);
+use Symbol;
 
-use base qw(Exporter);
+# Add compiling and memoizing abilities through multiple inheritance, to keep code separate
+use base qw(Exporter
+	    Sub::Contract::Compiler
+	    Sub::Contract::Memoizer);
 
 our @EXPORT = qw();
 our @EXPORT_OK = qw(contract);
@@ -27,14 +32,10 @@ our $VERSION = '0.01';
 
 my $pool = Sub::Contract::Pool::get_pool();
 
-#---------------------------------------------------------------
-#
-#   start source filter when used
-#
-
-sub import {
-  new Sub::Contract::SourceFilter;
-}
+# the argument list passed to the contractor
+local @Sub::Contract::args;
+local $Sub::Contract::wantarray;
+local @Sub::Contract::results;
 
 #---------------------------------------------------------------
 #
@@ -113,7 +114,7 @@ sub reset {
 sub _set_in_out {
     my ($type,$self,@checks) = @_;
     local $Carp::CarpLevel = 2;
-    my $validator = new Sub::Contract::ArgValidator($type);
+    my $validator = new Sub::Contract::ArgumentChecks($type);
 
     my $pos = 0;
 
@@ -166,7 +167,7 @@ sub _set_in_out {
 	$pos += 2;
     }
 
-    # everything ok!
+    # everything ok!perl 06
     $self->{$type} = $validator;
     return $self;
 }
@@ -638,7 +639,7 @@ See 'Issues with contract programming' under 'Discussion'.
 
 =head1 VERSION
 
-$Id: Contract.pm,v 1.9 2007-09-21 14:14:59 erwan_lemonnier Exp $
+$Id: Contract.pm,v 1.10 2008-01-02 14:12:13 erwan_lemonnier Exp $
 
 =head1 AUTHORS
 

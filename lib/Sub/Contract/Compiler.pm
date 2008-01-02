@@ -1,7 +1,7 @@
 #
 #   Sub::Contract::Compiler - Compile, enable and disable a contract
 #
-#   $Id: Compiler.pm,v 1.3 2007-05-14 20:25:17 erwan_lemonnier Exp $
+#   $Id: Compiler.pm,v 1.4 2008-01-02 14:12:13 erwan_lemonnier Exp $
 #
 #   070228 erwan Wrote API squeleton
 #
@@ -12,6 +12,7 @@ use strict;
 use warnings;
 use Carp qw(croak);
 use Data::Dumper;
+use Sub::Contract::Debug qw(debug);
 use Hook::WrapSub qw(wrap_subs unwrap_subs);;
 
 #---------------------------------------------------------------
@@ -22,7 +23,7 @@ use Hook::WrapSub qw(wrap_subs unwrap_subs);;
 sub enable {
     my $self = shift;
 
-    print "Sub::Contract: enabling contract for [".$self->contractor."]\n" if ($Sub::Contract::DEBUG);
+    debug(1,"Sub::Contract: enabling contract for [".$self->contractor."]");
 
     $self->disable if ($self->{is_enabled});
 
@@ -58,7 +59,7 @@ sub enable {
 sub disable {
     my $self = shift;
     if ($self->{is_enabled}) {
-	print "Sub::Contract: disabling contract on [".$self->contractor."]\n" if ($Sub::Contract::DEBUG);
+	debug(1,"Sub::Contract: disabling contract on [".$self->contractor."]");
 
 	# restore original sub
 	unwrap_subs $self->contractor;
@@ -248,13 +249,11 @@ sub _compile {
 	    }
     }, $str_code;
 
-    if ($Sub::Contract::DEBUG > 1) {
-	print "Sub::Contract: wrapping this code $state [$contractor]:\n";
-	print "-------------------------------------------------------\n";
-	$str_code =~ s/^([\s\t]+)//gm;
-	print $str_code;
-	print "\n-------------------------------------------------------\n";
-    }
+    debug(2,join("\n",
+		 "Sub::Contract: wrapping this code $state [$contractor]:",
+		 "-------------------------------------------------------",
+		 $str_code,
+		 "-------------------------------------------------------"));
 
     my $cref;
     eval $str_code;
@@ -301,7 +300,7 @@ See 'Sub::Contract'.
 
 =head1 VERSION
 
-$Id: Compiler.pm,v 1.3 2007-05-14 20:25:17 erwan_lemonnier Exp $
+$Id: Compiler.pm,v 1.4 2008-01-02 14:12:13 erwan_lemonnier Exp $
 
 =head1 AUTHOR
 

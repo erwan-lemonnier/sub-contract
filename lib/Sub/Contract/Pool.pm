@@ -1,7 +1,7 @@
 #
 #   Sub::Contract::Pool - The pool of contracts
 #
-#   $Id: Pool.pm,v 1.5 2007-09-21 14:14:59 erwan_lemonnier Exp $
+#   $Id: Pool.pm,v 1.6 2008-01-02 14:12:13 erwan_lemonnier Exp $
 #
 #   070228 erwan Wrote API squeleton
 #
@@ -153,7 +153,6 @@ sub find_contracts_matching {
 
 sub AUTOLOAD {
     my $caller = $AUTOLOAD;
-    print "intercepted [$caller]\n";
 }
 
 
@@ -244,7 +243,7 @@ See 'Sub::Contract'.
 
 =head1 VERSION
 
-$Id: Pool.pm,v 1.5 2007-09-21 14:14:59 erwan_lemonnier Exp $
+$Id: Pool.pm,v 1.6 2008-01-02 14:12:13 erwan_lemonnier Exp $
 
 =head1 AUTHOR
 
