@@ -1,9 +1,7 @@
 #
 #   Sub::Contract::Pool - The pool of contracts
 #
-#   $Id: Pool.pm,v 1.6 2008-01-02 14:12:13 erwan_lemonnier Exp $
-#
-#   070228 erwan Wrote API squeleton
+#   $Id: Pool.pm,v 1.7 2008-04-25 14:01:52 erwan_lemonnier Exp $
 #
 
 package Sub::Contract::Pool;
@@ -20,7 +18,7 @@ use accessors qw( _contract_index
 use base qw(Exporter);
 
 our @EXPORT = ();
-our @EXPORT_OK = ('get_pool');
+our @EXPORT_OK = ('get_contract_pool');
 
 #---------------------------------------------------------------
 #
@@ -29,7 +27,7 @@ our @EXPORT_OK = ('get_pool');
 
 my $pool;
 
-sub get_pool {
+sub get_contract_pool {
     if (!defined $pool) {
 	$pool = bless({},__PACKAGE__);
 	$pool->_contract_index({});
@@ -54,7 +52,7 @@ sub list_all_contracts {
 
 #---------------------------------------------------------------
 #
-#   has_contract - 
+#   has_contract -
 #
 
 # TODO: should it be removed? to use find_contract instead? would it be too slow?
@@ -63,9 +61,9 @@ sub has_contract {
     my ($self, $contractor) = @_;
 
     croak "method has_contract() expects a fully qualified function name as argument"
-	if ( scalar @_ != 2 || 
+	if ( scalar @_ != 2 ||
 	     !defined $contractor ||
-	     ref $contractor ne '' || 
+	     ref $contractor ne '' ||
 	     $contractor !~ /::/
 	);
 
@@ -107,12 +105,12 @@ sub _add_contract {
 
 sub enable_all_contracts {
     my $self = shift;
-    map { $_->enable } $self->list_all_contracts; 
+    map { $_->enable } $self->list_all_contracts;
 }
 
 sub disable_all_contracts {
     my $self = shift;
-    map { $_->disable } $self->list_all_contracts; 
+    map { $_->disable } $self->list_all_contracts;
 }
 
 sub enable_contracts_matching {
@@ -225,13 +223,13 @@ as for C<find_contracts_matching>.
 
 =item C<< $pool->disable_contracts_matching($regexp) >>
 
-Disable all the contracts registered in the pool whose contractor's 
+Disable all the contracts registered in the pool whose contractor's
 fully qualified names matches the string C<$regexp>. C<regexp> works
 as for C<find_contracts_matching>.
 
 =item C<< $pool->find_contracts_matching($regexp) >>
 
-Find all the contracts registered in the pool and whose contractor's 
+Find all the contracts registered in the pool and whose contractor's
 fully qualified names matches the string C<$regexp>.
 TODO
 
@@ -243,7 +241,7 @@ See 'Sub::Contract'.
 
 =head1 VERSION
 
-$Id: Pool.pm,v 1.6 2008-01-02 14:12:13 erwan_lemonnier Exp $
+$Id: Pool.pm,v 1.7 2008-04-25 14:01:52 erwan_lemonnier Exp $
 
 =head1 AUTHOR
 

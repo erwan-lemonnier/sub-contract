@@ -1,6 +1,6 @@
 #-------------------------------------------------------------------
 #
-#   $Id: 07_test_error_messages.t,v 1.2 2008-04-25 13:14:37 erwan_lemonnier Exp $
+#   $Id: 07_test_error_messages.t,v 1.3 2008-04-25 14:01:52 erwan_lemonnier Exp $
 #
 
 package main;
@@ -71,11 +71,7 @@ $c->reset
 
 eval { foo(); };
 
-TODO: {
-    local $TODO = "correct confess's stack appearance";
-
-    ok($@ =~ /confessing now at .*07_test_error_messages.t line/, "condition confesses with correct error message (anonymous sub)");
-}
+ok($@ =~ /confessing now at .*07_test_error_messages.t line 72/, "condition confesses with correct error message (anonymous sub)");
 
 #------------------------------------------------------------
 #
@@ -86,23 +82,23 @@ TODO: {
 # invariant before
 $c->reset->invariant( sub { return 0; } )->enable;
 eval { foo(); };
-ok($@ =~ /invariant fails before calling subroutine \[main::foo\] at .*07_test_error_messages.t line 88/, "invariant fails before");
+ok($@ =~ /invariant fails before calling subroutine \[main::foo\] at .*07_test_error_messages.t line 84/, "invariant fails before");
 
 # invariant after
 my $count = 0;
 $c->reset->invariant( sub { $count++; return $count != 1; } )->enable;
 eval { foo(); };
-ok($@ =~ /invariant fails before calling subroutine \[main::foo\] at .*07_test_error_messages.t line 94/, "invariant fails before");
+ok($@ =~ /invariant fails before calling subroutine \[main::foo\] at .*07_test_error_messages.t line 90/, "invariant fails before");
 
 # pre fails
 $c->reset->pre( sub { return 0; } )->enable;
 eval { foo(); };
-ok($@ =~ /pre-condition fails before calling subroutine \[main::foo\] at .*07_test_error_messages.t line 99/, "pre condition fails");
+ok($@ =~ /pre-condition fails before calling subroutine \[main::foo\] at .*07_test_error_messages.t line 95/, "pre condition fails");
 
 # post fails
 $c->reset->post( sub { return 0; } )->enable;
 eval { foo(); };
-ok($@ =~ /post-condition fails after calling subroutine \[main::foo\] at .*07_test_error_messages.t line 104/, "post condition fails");
+ok($@ =~ /post-condition fails after calling subroutine \[main::foo\] at .*07_test_error_messages.t line 100/, "post condition fails");
 
 # TODO: add more tests
 

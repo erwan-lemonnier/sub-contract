@@ -1,9 +1,7 @@
 #
 #   Sub::Contract::Compiler - Compile, enable and disable a contract
 #
-#   $Id: Compiler.pm,v 1.5 2008-04-25 13:16:05 erwan_lemonnier Exp $
-#
-#   070228 erwan Wrote API squeleton
+#   $Id: Compiler.pm,v 1.6 2008-04-25 14:01:52 erwan_lemonnier Exp $
 #
 
 package Sub::Contract::Compiler;
@@ -13,7 +11,7 @@ use warnings;
 use Carp qw(croak);
 use Data::Dumper;
 use Sub::Contract::Debug qw(debug);
-use Hook::WrapSub qw(wrap_subs unwrap_subs);;
+use Hook::WrapSub qw(wrap_subs unwrap_subs);
 
 #---------------------------------------------------------------
 #
@@ -98,6 +96,13 @@ sub _run {
     local $Carp::CarpLevel = 0; # is this needed? isn't local doing its job?
     return $res;
 }
+
+# The strategy we use for building the contract validation sub is to
+# to (quite horribly) build a string containing the code of the validation
+# sub, then compiling this code with eval. We could instead use a closure,
+# but that would mean that many things we can test at compile time would
+# end up being tested each time the closure is called which would be a
+# waste of cpu.
 
 sub _compile {
     my ($state,$contractor,$validator,$check_condition,$check_invariant) = @_;
@@ -280,7 +285,8 @@ See 'Sub::Contract'.
 Subroutine contracts defined with Sub::Contract must be compiled
 and enabled in order to start applying onto the contractor. A
 contractor can even be disabled later on, or recompiled after
-changes. Those methods are implemented in Sub::Contract::Compiler.
+changes. Those methods are implemented in Sub::Contract::Compiler
+and inherited by Sub::Contract.
 
 =head1 API
 
@@ -290,9 +296,15 @@ See 'Sub::Contract'.
 
 =item enable()
 
+See 'Sub::Contract'.
+
 =item disable()
 
+See 'Sub::Contract'.
+
 =item is_enabled()
+
+See 'Sub::Contract'.
 
 =back
 
@@ -302,7 +314,7 @@ See 'Sub::Contract'.
 
 =head1 VERSION
 
-$Id: Compiler.pm,v 1.5 2008-04-25 13:16:05 erwan_lemonnier Exp $
+$Id: Compiler.pm,v 1.6 2008-04-25 14:01:52 erwan_lemonnier Exp $
 
 =head1 AUTHOR
 

@@ -1,9 +1,7 @@
 #
 #   Sub::Contract::Debug - Guess once...
 #
-#   $Id: Debug.pm,v 1.2 2007-09-21 14:14:59 erwan_lemonnier Exp $
-#
-#   070921 erwan Insomnia...
+#   $Id: Debug.pm,v 1.3 2008-04-25 14:01:52 erwan_lemonnier Exp $
 #
 
 package Sub::Contract::Debug;
@@ -69,13 +67,15 @@ verbosity.
 Print a debug message to stdout if C<$level> is lower or equal
 to C<$Sub::Contract::Debug::DEBUG>.
 
+=back
+
 =head1 SEE ALSO
 
 See 'Sub::Contract'.
 
 =head1 VERSION
 
-$Id: Debug.pm,v 1.2 2007-09-21 14:14:59 erwan_lemonnier Exp $
+$Id: Debug.pm,v 1.3 2008-04-25 14:01:52 erwan_lemonnier Exp $
 
 =head1 AUTHOR
 

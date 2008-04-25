@@ -1,10 +1,7 @@
 #
 #   Sub::Contract::ArgumentChecks - Conditions on input/return arguments
 #
-#   $Id: ArgumentChecks.pm,v 1.1 2008-01-02 14:10:12 erwan_lemonnier Exp $
-#
-#   070228 erwan Wrote API squeleton
-#   080202 erwan Refactor
+#   $Id: ArgumentChecks.pm,v 1.2 2008-04-25 14:01:52 erwan_lemonnier Exp $
 #
 
 package Sub::Contract::ArgumentChecks;
@@ -116,7 +113,7 @@ See 'Sub::Contract'.
 
 =head1 VERSION
 
-$Id: ArgumentChecks.pm,v 1.1 2008-01-02 14:10:12 erwan_lemonnier Exp $
+$Id: ArgumentChecks.pm,v 1.2 2008-04-25 14:01:52 erwan_lemonnier Exp $
 
 =head1 AUTHOR
 
