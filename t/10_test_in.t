@@ -1,8 +1,6 @@
 #-------------------------------------------------------------------
 #
-#   $Id: 10_test_in.t,v 1.1 2007-03-30 08:38:50 erwan_lemonnier Exp $
-#
-#   070326 erwan Started
+#   $Id: 10_test_in.t,v 1.2 2008-04-25 13:14:37 erwan_lemonnier Exp $
 #
 
 package My::Test;

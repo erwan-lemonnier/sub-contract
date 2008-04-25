@@ -1,8 +1,6 @@
 #-------------------------------------------------------------------
 #
-#   $Id: 08_test_in_out_arguments_validation.t,v 1.2 2008-01-02 14:38:39 erwan_lemonnier Exp $
-#
-#   070314 erwan Started
+#   $Id: 08_test_in_out_arguments_validation.t,v 1.3 2008-04-25 13:14:37 erwan_lemonnier Exp $
 #
 
 use strict;
@@ -85,7 +83,7 @@ while (@tests) {
 
     if ($error) {
 	ok( $@ =~ /$error/, "args $line lead to correct error in in()");
-	ok( $@ =~ /at .*08_test_in_out_arguments_validation.t line 84/, "in() returns correct error message")
+	ok( $@ =~ /at .*08_test_in_out_arguments_validation.t line 82/, "in() returns correct error message")
     } else {
 	ok( !defined $@ || $@ eq '', "args $line are correct in in()");
     }

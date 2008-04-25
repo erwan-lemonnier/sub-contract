@@ -1,8 +1,6 @@
 #-------------------------------------------------------------------
 #
-#   $Id: 07_test_error_messages.t,v 1.1 2007-03-30 08:38:50 erwan_lemonnier Exp $
-#
-#   070321 erwan Started
+#   $Id: 07_test_error_messages.t,v 1.2 2008-04-25 13:14:37 erwan_lemonnier Exp $
 #
 
 package main;
@@ -42,7 +40,7 @@ my $c = contract('foo')
     ->enable;
 
 eval { foo(); };
-ok($@ =~ /whatever at .*07_test_error_messages.t line 36/, "condition dies with correct error message (called sub)");
+ok($@ =~ /whatever at .*07_test_error_messages.t line 34/, "condition dies with correct error message (called sub)");
 
 # test die called from contract def
 $c->reset
@@ -52,7 +50,7 @@ $c->reset
     ->enable;
 
 eval { foo(); };
-ok($@ =~ /enough!! at .*07_test_error_messages.t line 50/, "condition dies with correct error message (anonymous sub)");
+ok($@ =~ /enough!! at .*07_test_error_messages.t line 48/, "condition dies with correct error message (anonymous sub)");
 
 # test croak
 $c->reset
@@ -62,7 +60,7 @@ $c->reset
     ->enable;
 
 eval { foo(); };
-ok($@ =~ /croaking now at .*07_test_error_messages.t line 64/, "condition croaks with correct error message (anonymous sub)");
+ok($@ =~ /croaking now at .*07_test_error_messages.t line 62/, "condition croaks with correct error message (anonymous sub)");
 
 # test confess
 $c->reset
@@ -88,23 +86,23 @@ TODO: {
 # invariant before
 $c->reset->invariant( sub { return 0; } )->enable;
 eval { foo(); };
-ok($@ =~ /invariant fails before calling subroutine \[main::foo\] at .*07_test_error_messages.t line 90/, "invariant fails before");
+ok($@ =~ /invariant fails before calling subroutine \[main::foo\] at .*07_test_error_messages.t line 88/, "invariant fails before");
 
 # invariant after
 my $count = 0;
 $c->reset->invariant( sub { $count++; return $count != 1; } )->enable;
 eval { foo(); };
-ok($@ =~ /invariant fails before calling subroutine \[main::foo\] at .*07_test_error_messages.t line 96/, "invariant fails before");
+ok($@ =~ /invariant fails before calling subroutine \[main::foo\] at .*07_test_error_messages.t line 94/, "invariant fails before");
 
 # pre fails
 $c->reset->pre( sub { return 0; } )->enable;
 eval { foo(); };
-ok($@ =~ /pre-condition fails before calling subroutine \[main::foo\] at .*07_test_error_messages.t line 101/, "pre condition fails");
+ok($@ =~ /pre-condition fails before calling subroutine \[main::foo\] at .*07_test_error_messages.t line 99/, "pre condition fails");
 
 # post fails
 $c->reset->post( sub { return 0; } )->enable;
 eval { foo(); };
-ok($@ =~ /post-condition fails after calling subroutine \[main::foo\] at .*07_test_error_messages.t line 106/, "post condition fails");
+ok($@ =~ /post-condition fails after calling subroutine \[main::foo\] at .*07_test_error_messages.t line 104/, "post condition fails");
 
 # TODO: add more tests
 
