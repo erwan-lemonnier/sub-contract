@@ -1,8 +1,6 @@
 #-------------------------------------------------------------------
 #
-#   $Id: 03_test_invariant.t,v 1.2 2008-01-02 14:38:39 erwan_lemonnier Exp $
-#
-#   070320 erwan Started
+#   $Id: 03_test_invariant.t,v 1.3 2008-04-25 10:59:36 erwan_lemonnier Exp $
 #
 
 package My::Test;
@@ -46,10 +44,10 @@ eval { My::Test::foo(3) };
 ok(!defined $@ || $@ eq "", "invariant passes");
 
 eval { My::Test::foo(2) };
-ok( $@ =~ /invariant fails after calling subroutine \[My::Test::foo\] at .*03_test_invariant.t line 48/, "invariant fails after");
+ok( $@ =~ /invariant fails after calling subroutine \[My::Test::foo\] at .*03_test_invariant.t line 46/, "invariant fails after");
 
 eval { My::Test::foo(3) };
-ok( $@ =~ /invariant fails before calling subroutine \[My::Test::foo\] at .*03_test_invariant.t line 51/, "invariant fails before");
+ok( $@ =~ /invariant fails before calling subroutine \[My::Test::foo\] at .*03_test_invariant.t line 49/, "invariant fails before");
 
 
 

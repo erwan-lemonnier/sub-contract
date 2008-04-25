@@ -1,8 +1,6 @@
 #-------------------------------------------------------------------
 #
-#   $Id: 02_test_basic_contract.t,v 1.2 2008-01-02 14:38:39 erwan_lemonnier Exp $
-#
-#   070314 erwan Started
+#   $Id: 02_test_basic_contract.t,v 1.3 2008-04-25 10:59:36 erwan_lemonnier Exp $
 #
 
 #-------------------------------------------------------------------
@@ -39,7 +37,7 @@ use Data::Dumper;
 BEGIN {
 
     use check_requirements;
-    plan tests => 24;
+    plan tests => 25;
 
     use_ok("Sub::Contract",'contract');
     use_ok("Sub::Contract::Pool",'get_pool');
@@ -88,7 +86,6 @@ is_deeply($c1,$c4,"Sub::Contract->new() returns same as contract() when caller s
 $c1->{contractor} = 'My::Test::foo';
 is_deeply($c1,My::Test::get_contract,"same when called from another package than main::");
 
-#$c1->_contractor('');
 $c1->{contractor} = 'My::Test::foo2';
 my $c6 = Sub::Contract->new('foo2', caller => 'My::Test');
 is_deeply($c1,$c6,"same as above, but set by caller =>");
@@ -112,7 +109,11 @@ is(foo(),"bob","foo returns bob after contract enabled");
 
 # now disabling contract
 $c1->disable();
-is(foo(),"bob","foo returns bob after contract enabled");
+is(foo(),"bob","foo returns bob after contract disabled");
+
+# how is the pool now?
+@all = $pool->list_all_contracts();
+is(scalar @all, 6, "pool now contains 6 contracts");
 
 # test croaks in new()
 eval { Sub::Contract->new('foo') };
@@ -134,12 +135,7 @@ ok( $@ =~ /contract\(\) expects only one argument, a subroutine name at .*02_tes
 eval { contract(undef) };
 ok( $@ =~ /contract\(\) expects only one argument, a subroutine name at .*02_test_basic_contract.t/, "contract() croaks on undefined argument");
 
-#@all = $pool->list_all_contracts();
-#is(scalar @all, 4, "")
+# TODO: test more croaks?
 
-
-# TODO: test every croak
-
-#print Dumper($c1);
 
 

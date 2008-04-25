@@ -1,8 +1,6 @@
 #-------------------------------------------------------------------
 #
-#   $Id: 04_test_pre_post_conditions.t,v 1.3 2008-01-02 14:38:39 erwan_lemonnier Exp $
-#
-#   070321 erwan Started
+#   $Id: 04_test_pre_post_conditions.t,v 1.4 2008-04-25 10:59:36 erwan_lemonnier Exp $
 #
 
 package main;
@@ -50,10 +48,10 @@ eval { foo('bob'); };
 ok(!defined $@ || $@ eq "", "pre condition passes");
 
 eval { foo('bilou') };
-ok( $@ =~ /pre-condition fails before calling subroutine \[main::foo\] at .*04_test_pre_post_conditions.t line 52/, "pre condition fails");
+ok( $@ =~ /pre-condition fails before calling subroutine \[main::foo\] at .*04_test_pre_post_conditions.t line 50/, "pre condition fails");
 
 eval { foo('please die') };
-ok( $@ =~ /dying now at .*04_test_pre_post_conditions.t line 55/, "pre condition croaks");
+ok( $@ =~ /dying now at .*04_test_pre_post_conditions.t line 53/, "pre condition croaks");
 
 # test post condition
 eval {
@@ -76,11 +74,11 @@ is_deeply(\@res,[1,2,3], "foo returned [1,2,3]");
 
 @result = (4,5,6);
 eval { @res = foo('bilou'); };
-ok($@ =~ /post-condition fails after calling subroutine \[main::foo\] at .*04_test_pre_post_conditions.t line 78/, "post condition failed");
+ok($@ =~ /post-condition fails after calling subroutine \[main::foo\] at .*04_test_pre_post_conditions.t line 76/, "post condition failed");
 
 my $res;
 @result = (1,2);
 eval { $res = foo('asldkfjbilou'); };
-ok($@ =~ /foo called in wrong context at .*04_test_pre_post_conditions.t line 83/, "post condition croaks");
+ok($@ =~ /foo called in wrong context at .*04_test_pre_post_conditions.t line 81/, "post condition croaks");
 
 

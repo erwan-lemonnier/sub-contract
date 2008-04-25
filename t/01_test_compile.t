@@ -1,8 +1,6 @@
 #-------------------------------------------------------------------
 #
-#   $Id: 01_test_compile.t,v 1.4 2008-01-02 14:11:49 erwan_lemonnier Exp $
-#
-#   070314 erwan Started
+#   $Id: 01_test_compile.t,v 1.5 2008-04-25 10:59:36 erwan_lemonnier Exp $
 #
 
 use strict;
