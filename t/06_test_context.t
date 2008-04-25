@@ -1,6 +1,6 @@
 #-------------------------------------------------------------------
 #
-#   $Id: 06_test_context.t,v 1.2 2008-04-25 13:14:37 erwan_lemonnier Exp $
+#   $Id: 06_test_context.t,v 1.3 2008-04-25 13:52:07 erwan_lemonnier Exp $
 #
 
 package main;
@@ -45,7 +45,7 @@ sub pre {
 }
 
 sub post {
-    is_deeply(\@_,\@Sub::Contract::args, "check \@_ after call");
+    is_deeply(\@_,\@Sub::Contract::results, "check \@_ after call");
     is($Sub::Contract::wantarray, $post_wantarray, "check Sub::Contract::wantarray after call");
     is_deeply(\@Sub::Contract::args, \@post_args, "check Sub::Contract::args after call");
     is_deeply(\@Sub::Contract::results, \@post_result, "check Sub::Contract::results after call");

@@ -1,6 +1,6 @@
 #-------------------------------------------------------------------
 #
-#   $Id: 02_test_basic_contract.t,v 1.3 2008-04-25 10:59:36 erwan_lemonnier Exp $
+#   $Id: 02_test_basic_contract.t,v 1.4 2008-04-25 13:52:07 erwan_lemonnier Exp $
 #
 
 #-------------------------------------------------------------------
@@ -40,7 +40,7 @@ BEGIN {
     plan tests => 25;
 
     use_ok("Sub::Contract",'contract');
-    use_ok("Sub::Contract::Pool",'get_pool');
+    use_ok("Sub::Contract::Pool",'get_contract_pool');
 };
 
 my $value;
@@ -49,7 +49,7 @@ sub foo { return $value; }
 my $c1 = contract('foo');
 
 # test that the contract pool now contains all those contracts
-my $pool = get_pool();
+my $pool = get_contract_pool();
 is(ref $pool, 'Sub::Contract::Pool', "check got a contract pool");
 
 my @all = $pool->list_all_contracts();
