@@ -2,7 +2,7 @@
 #
 #   Sub::Contract - Programming by contract and memoizing in one
 #
-#   $Id: Contract.pm,v 1.11 2008-04-25 14:01:52 erwan_lemonnier Exp $
+#   $Id: Contract.pm,v 1.12 2008-04-25 15:55:12 erwan_lemonnier Exp $
 #
 
 package Sub::Contract;
@@ -24,7 +24,7 @@ use base qw( Exporter
 our @EXPORT = qw();
 our @EXPORT_OK = qw( contract
 		     undef_or
-		     def_and
+		     defined_and
 		     );
 
 our $VERSION = '0.01';
@@ -64,12 +64,12 @@ sub undef_or {
 
 #---------------------------------------------------------------
 #
-#   def_and - take a test coderef and returns a test coderef that
-#             passes if argument is defined and validate the coderef
+#   defined_and - take a test coderef and returns a test coderef that
+#                 passes if argument is defined and validate the coderef
 #
 
-sub def_and {
-    croak "def_and() expects a coderef" if (scalar @_ != 1 || !defined $_[0] || ref $_[0] ne 'CODE');
+sub defined_and {
+    croak "defined_and() expects a coderef" if (scalar @_ != 1 || !defined $_[0] || ref $_[0] ne 'CODE');
     my $test = shift;
     return sub {
 	return 0 if (!defined $_[0]);
@@ -278,6 +278,14 @@ sub contractor {
 __END__
 
 =head1 NAME
+
+WARNING!!!
+
+This is an alfa release!
+Some features are not implemented yet and test coverage is still low!!
+
+WARNING!!!
+
 
 Sub::Contract - Pragmatic contract programming for Perl
 
@@ -657,29 +665,33 @@ saying 'this argument must be undefined or validate this test'.
 Assuming you have a test function C<is_integer> that passes if its
 argument is an integer and croaks otherwise, you could write:
 
+    use Sub::Contract qw(contract undef_or);
+
     # set_value takes only 1 argument that must be either
     # undefined or be validated by is_integer()
     contract('set_value')
-        ->in(undef_or \&is_integer)
+        ->in(undef_or(\&is_integer))
         ->enable;
 
     sub set_value {...}
 
 
-=item C<< def_and($coderef) >>
+=item C<< defined_and($coderef) >>
 
 Syntax sugar to allow you to specify a constraint on an argument
 saying 'this argument must be defined and validate this test'.
 
 Example:
 
+    use Sub::Contract qw(contract defined_and undef_or);
+
     # set_name takes a hash that must contain a key 'name'
     # that must be defined and validate is_word(), and may
     # contain a key 'nickname' that can be either undefine
     # or must validate is_word().
     contract('set_name')
-        ->in( name => def_and \&is_word,
-              nickname => undef_or \&is_word)
+        ->in( name => defined_and(\&is_word),
+              nickname => undef_or(\&is_word))
         ->enable;
 
    sub set_name {...}
@@ -742,7 +754,7 @@ See 'Issues with contract programming' under 'Discussion'.
 
 =head1 VERSION
 
-$Id: Contract.pm,v 1.11 2008-04-25 14:01:52 erwan_lemonnier Exp $
+$Id: Contract.pm,v 1.12 2008-04-25 15:55:12 erwan_lemonnier Exp $
 
 =head1 AUTHORS
 

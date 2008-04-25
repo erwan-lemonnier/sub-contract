@@ -1,10 +1,7 @@
 Sub::Contract
 =============
 
-Yet another contract module...
-Sub::Contract Lets you define contracts per 
-functions with a bit more flexibility than
-Class::Contract and Class::Agreement.
+Yet another contract module for Perl5
 
 See perldoc Sub::Contract for more information.
 
@@ -21,7 +18,7 @@ DEPENDENCIES
 
 This module requires these other modules and libraries:
 
-    TODO
+    Hook::WrapSubs
 
 AUTHOR
 
