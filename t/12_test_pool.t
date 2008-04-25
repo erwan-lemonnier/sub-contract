@@ -1,8 +1,6 @@
 #-------------------------------------------------------------------
 #
-#   $Id: 12_test_pool.t,v 1.1 2008-04-25 12:37:22 erwan_lemonnier Exp $
-#
-#   070430 erwan Started
+#   $Id: 12_test_pool.t,v 1.2 2008-04-25 13:48:10 erwan_lemonnier Exp $
 #
 
 use strict;
@@ -77,7 +75,7 @@ sub look_at_pool {
     if ($expect{has_not}) {
 	push @impossible_names, @{$expect{has_not}};
     }
-    
+
     # check that the pool contains no contract for those fully qualified names
     foreach my $name (@impossible_names) {
 	ok(!$pool->has_contract($name), "pool has no contract for contractor [$name]");
@@ -93,7 +91,7 @@ sub look_at_pool {
 	    foreach my $contract ($pool->list_all_contracts()) {
 		$found++ if ($contract->contractor eq $name);
 	    }
-	    
+
 	    is($found, 1, "this contract really is in the pool");
 	}
     }
