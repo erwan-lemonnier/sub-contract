@@ -1,7 +1,7 @@
 #
 #   Sub::Contract::Compiler - Compile, enable and disable a contract
 #
-#   $Id: Compiler.pm,v 1.4 2008-01-02 14:12:13 erwan_lemonnier Exp $
+#   $Id: Compiler.pm,v 1.5 2008-04-25 13:16:05 erwan_lemonnier Exp $
 #
 #   070228 erwan Wrote API squeleton
 #
@@ -142,7 +142,7 @@ sub _compile {
 	    # if the contractor is called without context, Hook::WrapSub discards the result
 	    # so we can't validate the returned arguments. maybe we should issue a warning?
 	    $str_code .= sprintf q{
-		if (!_run($check_condition,@Sub::Contract::args)) {
+		if (!_run($check_condition,@Sub::Contract::results)) {
 		    _croak "post-condition fails after calling subroutine [%s]";
 		}
 	    }, $contractor;
@@ -159,7 +159,7 @@ sub _compile {
 	if ($state eq 'before') {
 	    $str_code .= q{ my @args = @_; };
 	} else {
-	    $str_code .= q{ my @args = @Sub::Contract::args; };
+	    $str_code .= q{ my @args = @Sub::Contract::results; };
 	}
 
 	# do we have arguments to validate?
@@ -243,11 +243,13 @@ sub _compile {
 
     $str_code = sprintf q{
 	$cref = sub {
-	    my $res;
 	    use Carp;
 	    %s
 	    }
     }, $str_code;
+
+    # remove confusing left indentation
+    $str_code =~ s/^\s+//gm;
 
     debug(2,join("\n",
 		 "Sub::Contract: wrapping this code $state [$contractor]:",
@@ -300,7 +302,7 @@ See 'Sub::Contract'.
 
 =head1 VERSION
 
-$Id: Compiler.pm,v 1.4 2008-01-02 14:12:13 erwan_lemonnier Exp $
+$Id: Compiler.pm,v 1.5 2008-04-25 13:16:05 erwan_lemonnier Exp $
 
 =head1 AUTHOR
 
