@@ -2,7 +2,7 @@
 #
 #   Sub::Contract - Programming by contract and memoizing in one
 #
-#   $Id: Contract.pm,v 1.13 2008-04-28 15:47:50 erwan_lemonnier Exp $
+#   $Id: Contract.pm,v 1.14 2008-04-28 15:50:54 erwan_lemonnier Exp $
 #
 
 package Sub::Contract;
@@ -646,11 +646,15 @@ from around the contractor.
 
 =item C<< $contract->is_enabled >>
 
-Returns true if this contract is currently enabled.
+Return true if this contract is currently enabled.
 
 =item C<< $contract->contractor >>
 
-Returns the fully qualified name name of the subroutine affected by this contract.
+Return the fully qualified name name of the subroutine affected by this contract.
+
+=item C<< $contract->contractor_cref >>
+
+Return a code reference to the contracted subroutine.
 
 =item C<< $contract->reset >>
 
@@ -775,7 +779,7 @@ See 'Issues with contract programming' under 'Discussion'.
 
 =head1 VERSION
 
-$Id: Contract.pm,v 1.13 2008-04-28 15:47:50 erwan_lemonnier Exp $
+$Id: Contract.pm,v 1.14 2008-04-28 15:50:54 erwan_lemonnier Exp $
 
 =head1 AUTHORS
 
