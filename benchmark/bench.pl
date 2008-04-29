@@ -25,7 +25,7 @@ ContractClosure::contract('foo2',
 	 },
     );
 
-timethese(100000, {
+timethese(1000000, {
     'Sub::Contract'   => sub { foo1(1) },
     'ContractClosure' => sub { foo2(1) },
 }
