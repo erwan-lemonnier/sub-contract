@@ -1,7 +1,7 @@
 #
 #   Sub::Contract::Compiler - Compile, enable and disable a contract
 #
-#   $Id: Compiler.pm,v 1.8 2008-04-29 08:30:41 erwan_lemonnier Exp $
+#   $Id: Compiler.pm,v 1.9 2008-04-29 12:24:26 erwan_lemonnier Exp $
 #
 
 package Sub::Contract::Compiler;
@@ -234,7 +234,7 @@ sub _generate_code {
 		}
 	    }, $varnames->{check}, $varnames->{contractor};
 	} else {
-	    # if the contractor is called without context, Hook::WrapSub discards the result
+	    # if the contractor is called without context, the result is set to ()
 	    # so we can't validate the returned arguments. maybe we should issue a warning?
 	    $str_code .= sprintf q{
 		if (!_run($%s,@Sub::Contract::results)) {
@@ -265,8 +265,7 @@ sub _generate_code {
 	    for (my $i=0; $i<scalar(@list_checks); $i++) {
 		if (defined $list_checks[$i]) {
 		    $str_code .= sprintf q{
-			_croak "%s argument %s of [$%s] fails its contract constraint"
-			    if (!_run($%s[%s], $args[0]));
+			_croak "%s argument %s of [$%s] fails its contract constraint" if (!_run($%s[%s], $args[0]));
 		    },
 		    ($state eq 'before')?'input':'return',
 		    $pos,
@@ -286,8 +285,7 @@ sub _generate_code {
 
 		# croak if odd number of elements
 		$str_code .= sprintf q{
-		    _croak "odd number of hash-style %s arguments in [$%s]"
-			if (scalar @args %% 2);
+		    _croak "odd number of hash-style %s arguments in [$%s]" if (scalar @args %% 2);
 		    my %%args = @args;
 		},
 		($state eq 'before')?'input':'return',
@@ -297,8 +295,7 @@ sub _generate_code {
 		while (my ($key,$check) = each %hash_checks) {
 		    if (defined $check) {
 			$str_code .= sprintf q{
-			    _croak "%s argument of [$%s] for key \'%s\' fails its contract constraint"
-				if (!_run($%s{%s}, $args{%s}));
+			    _croak "%s argument of [$%s] for key \'%s\' fails its contract constraint" if (!_run($%s{%s}, $args{%s}));
 			},
 			($state eq 'before')?'input':'return',
 			$varnames->{contractor},
@@ -318,14 +315,12 @@ sub _generate_code {
 	# there should be no arguments left
 	if ($validator->has_hash_args) {
 	    $str_code .= sprintf q{
-		_croak "function [$%s] got too many arguments"
-		    if (%%args);
-	    }, $varnames->{contractor};
+		_croak "function [$%s] %s" if (%%args);
+	    }, $varnames->{contractor}, ($state eq 'before')?'got too many input arguments':'returned too many return values';
 	} else {
 	    $str_code .= sprintf q{
-		_croak "function [$%s] got too many arguments"
-		    if (@args);
-	    }, $varnames->{contractor};
+		_croak "function [$%s] %s" if (@args);
+	    }, $varnames->{contractor}, ($state eq 'before')?'got too many input arguments':'returned too many return values';
 	}
     }
 
@@ -378,7 +373,7 @@ See 'Sub::Contract'.
 
 =head1 VERSION
 
-$Id: Compiler.pm,v 1.8 2008-04-29 08:30:41 erwan_lemonnier Exp $
+$Id: Compiler.pm,v 1.9 2008-04-29 12:24:26 erwan_lemonnier Exp $
 
 =head1 AUTHOR
 
