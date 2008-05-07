@@ -1,6 +1,6 @@
 #-------------------------------------------------------------------
 #
-#   $Id: 09_test_too_many_args.t,v 1.1 2008-04-29 10:17:42 erwan_lemonnier Exp $
+#   $Id: 09_test_too_many_args.t,v 1.2 2008-05-07 09:08:21 erwan_lemonnier Exp $
 #
 
 package main;
@@ -56,15 +56,15 @@ eval { foo_none() };
 ok(!defined $@ || $@ eq "", "foo_none no args");
 
 eval { foo_none(12) };
-ok($@ =~ /got too many input arguments/, "foo_none too many input arguments");
+ok($@ =~ /got unexpected input argument\(s\)/, "foo_none unexpected input arguments");
 
 @res = (1,2);
 eval { foo_none() };
-ok(!defined $@ || $@ eq "", "foo_none with return values but void context");
+ok(!defined $@ || $@ eq "", "foo_none with result values but void context");
 eval { my $s = foo_none() };
-ok($@ =~ /returned too many return values/, "foo_none too many return values (scalar context)");
+ok($@ =~ /returned unexpected result value\(s\)/, "foo_none unexpected result values (scalar context)");
 eval { my @s = foo_none() };
-ok($@ =~ /returned too many return values/, "foo_none too many return values (array context)");
+ok($@ =~ /returned unexpected result value\(s\)/, "foo_none unexpected result values (array context)");
 
 # test foo_array
 eval { foo_array(3,4) };
@@ -74,34 +74,34 @@ eval { foo_array(1) };
 ok(!defined $@ || $@ eq "", "foo_array 1 input arg");
 
 eval { foo_array(3,4,6) };
-ok($@ =~ /got too many input arguments/, "foo_array 3 input args");
+ok($@ =~ /got unexpected input argument\(s\)/, "foo_array 3 input args");
 
 @res = (1,2,3);
 eval { foo_array() };
-ok(!defined $@ || $@ eq "", "foo_array with 3 return values but void context");
+ok(!defined $@ || $@ eq "", "foo_array with 3 result values but void context");
 eval { my $s = foo_array() };
-ok(!defined $@ || $@ eq "", "foo_array with 3 return values but scalar context - ok in this particular case");
+ok(!defined $@ || $@ eq "", "foo_array with 3 result values but scalar context - ok in this particular case");
 eval { my @s = foo_array() };
-ok($@ =~ /returned too many return values/, "foo_array too many return values (array context)");
+ok($@ =~ /returned unexpected result value\(s\)/, "foo_array unexpected result values (array context)");
 
 # test foo_hash
 @res = (c => 1, d => 2);
 eval { foo_hash(a => 1, b => 2) };
 ok(!defined $@ || $@ eq "", "foo_hash 2 input hash args");
 
-eval { foo_hash(a => 1, o => 2) };
-ok($@ =~ /got too many input arguments/, "foo_hash too many input args");
+eval { foo_hash(a => 1, bboo => 2) };
+ok($@ =~ /got unexpected input argument\(s\): bboo/, "foo_hash unexpected input args");
 
 eval { foo_hash(a => 1) };
 ok(!defined $@ || $@ eq "", "foo_hash only 1 input arg");
 
-@res = (c => 1, d => 2, p => 5);
+@res = (c => 1, d => 2, poo => 5);
 eval { foo_none() };
-ok(!defined $@ || $@ eq "", "foo_hash with 3 return values but void context");
+ok(!defined $@ || $@ eq "", "foo_hash with 3 result values but void context");
 eval { my $s = foo_hash() };
-ok($@ =~ /odd number of hash-style return arguments/, "foo_hash with 3 return values but scalar context");
+ok($@ =~ /odd number of hash-style return arguments/, "foo_hash with 3 result values but scalar context");
 eval { my @s = foo_hash() };
-ok($@ =~ /returned too many return values/, "foo_none too many return values (array context)");
+ok($@ =~ /returned unexpected result value\(s\): poo/, "foo_none unexpected result values (array context)");
 
 # just to improve coverage:
 eval { my $s = foo_hash(1,2,3) };
@@ -113,7 +113,7 @@ eval { foo_mixed(0,1,a => 1, b => 2) };
 ok(!defined $@ || $@ eq "", "foo_mixed 4 input hash/list args");
 
 eval { foo_mixed(0,1,a => 1, o => 2) };
-ok($@ =~ /got too many input arguments/, "foo_mixed too many input args");
+ok($@ =~ /got unexpected input argument\(s\)/, "foo_mixed unexpected input args");
 
 eval { foo_mixed(0,1,a => 1, o => 2,8) };
 ok($@ =~ /odd number of hash-style input arguments/, "foo_mixed with 5 input values but scalar context");
@@ -123,11 +123,11 @@ ok(!defined $@ || $@ eq "", "foo_mixed only 1 input arg");
 
 @res = (1,2,c => 1, d => 2, p => 5);
 eval { foo_mixed() };
-ok(!defined $@ || $@ eq "", "foo_mixed with 8 return values but void context");
+ok(!defined $@ || $@ eq "", "foo_mixed with 8 result values but void context");
 eval { my $s = foo_mixed() };
-ok(!defined $@ || $@ eq "", "foo_mixed with 8 return values but scalar context - ok in that case");
+ok(!defined $@ || $@ eq "", "foo_mixed with 8 result values but scalar context - ok in that case");
 eval { my @s = foo_mixed() };
-ok($@ =~ /returned too many return values/, "foo_none too many return values (array context)");
+ok($@ =~ /returned unexpected result value\(s\)/, "foo_none unexpected result values (array context)");
 
 
 
