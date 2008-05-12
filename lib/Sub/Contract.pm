@@ -2,7 +2,7 @@
 #
 #   Sub::Contract - Programming by contract and memoizing in one
 #
-#   $Id: Contract.pm,v 1.17 2008-05-07 09:08:21 erwan_lemonnier Exp $
+#   $Id: Contract.pm,v 1.18 2008-05-12 11:00:53 erwan_lemonnier Exp $
 #
 
 package Sub::Contract;
@@ -25,6 +25,7 @@ our @EXPORT = qw();
 our @EXPORT_OK = qw( contract
 		     undef_or
 		     defined_and
+		     is_a
 		     );
 
 our $VERSION = '0.04';
@@ -74,6 +75,21 @@ sub defined_and {
     return sub {
 	return 0 if (!defined $_[0]);
 	return &$test(@_);
+    };
+}
+
+#---------------------------------------------------------------
+#
+#   is_a - take a package name and return a ref to a sub that
+#          verifies that its argument is an instance of this package
+#
+
+sub is_a {
+    croak "is_a() expects a package name" if (scalar @_ != 1 || !defined $_[0] || ref $_[0] ne '');
+    my $type = shift;
+    return sub {
+	return 0 if (!defined $_[0]);
+	return (ref $_[0] eq $type) ? 1:0;
     };
 }
 
@@ -820,7 +836,23 @@ Example:
     # or must validate is_word().
     contract('set_name')
         ->in( name => defined_and(\&is_word),
-              nickname => undef_or(\&is_word))
+              nickname => undef_or(\&is_word) )
+        ->enable;
+
+   sub set_name {...}
+
+
+=item C<< is_a($pkg) >>
+
+Returns a subroutine that takes 1 argument and returns
+true if this argument is an instance of C<$pkg> and
+false if not.
+
+Example:
+
+    # argument 'name' must be an instance of String::Name
+    contract('set_name')
+        ->in( name => is_a("String::Name") )
         ->enable;
 
    sub set_name {...}
@@ -883,7 +915,7 @@ See 'Issues with contract programming' under 'Discussion'.
 
 =head1 VERSION
 
-$Id: Contract.pm,v 1.17 2008-05-07 09:08:21 erwan_lemonnier Exp $
+$Id: Contract.pm,v 1.18 2008-05-12 11:00:53 erwan_lemonnier Exp $
 
 =head1 AUTHORS
 
