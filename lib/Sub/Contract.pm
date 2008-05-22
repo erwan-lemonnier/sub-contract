@@ -2,7 +2,7 @@
 #
 #   Sub::Contract - Programming by contract and memoizing in one
 #
-#   $Id: Contract.pm,v 1.19 2008-05-22 16:03:24 erwan_lemonnier Exp $
+#   $Id: Contract.pm,v 1.20 2008-05-22 16:08:56 erwan_lemonnier Exp $
 #
 
 package Sub::Contract;
@@ -316,14 +316,6 @@ __END__
 
 =head1 NAME
 
-WARNING!!!
-
-This is an alfa release!
-Some features are not implemented yet and test coverage is still low!!
-
-WARNING!!!
-
-
 Sub::Contract - Pragmatic contract programming for Perl
 
 =head1 SYNOPSIS
@@ -564,13 +556,9 @@ heavier syntax if you are only seeking to validate input arguements and return v
 Class::Agreement does not provide memoization from within the contract.
 
 
-
-
 TODO: more description
 TODO: how to enable contracts -> enable on each contract, or via the pool
-
 TODO: validation code should not change @_, else weird bugs...
-
 
 =back
 
@@ -915,7 +903,7 @@ See 'Issues with contract programming' under 'Discussion'.
 
 =head1 VERSION
 
-$Id: Contract.pm,v 1.19 2008-05-22 16:03:24 erwan_lemonnier Exp $
+$Id: Contract.pm,v 1.20 2008-05-22 16:08:56 erwan_lemonnier Exp $
 
 =head1 AUTHORS
 
