@@ -2,7 +2,7 @@
 #
 #   Sub::Contract - Programming by contract and memoizing in one
 #
-#   $Id: Contract.pm,v 1.18 2008-05-12 11:00:53 erwan_lemonnier Exp $
+#   $Id: Contract.pm,v 1.19 2008-05-22 16:03:24 erwan_lemonnier Exp $
 #
 
 package Sub::Contract;
@@ -28,7 +28,7 @@ our @EXPORT_OK = qw( contract
 		     is_a
 		     );
 
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 
 my $pool = Sub::Contract::Pool::get_contract_pool();
 
@@ -160,7 +160,7 @@ sub reset {
     $self->{pre}         = undef;        # Coderef checking pre conditions
     $self->{post}        = undef;        # Coderef checking post conditions
     $self->{invariant}   = undef;        # Coderef checking an invariant condition
-    $self->{is_memoized} = 0;
+    delete $self->{cache};
     return $self;
 }
 
@@ -915,7 +915,7 @@ See 'Issues with contract programming' under 'Discussion'.
 
 =head1 VERSION
 
-$Id: Contract.pm,v 1.18 2008-05-12 11:00:53 erwan_lemonnier Exp $
+$Id: Contract.pm,v 1.19 2008-05-22 16:03:24 erwan_lemonnier Exp $
 
 =head1 AUTHORS
 
