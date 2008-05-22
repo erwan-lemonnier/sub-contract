@@ -1,6 +1,6 @@
 #-------------------------------------------------------------------
 #
-#   $Id: 06_test_context.t,v 1.5 2008-05-22 16:03:24 erwan_lemonnier Exp $
+#   $Id: 06_test_context.t,v 1.6 2008-05-22 16:06:10 erwan_lemonnier Exp $
 #
 
 package main;
@@ -142,11 +142,11 @@ my $res;
     @pre_result = @post_result = ();
 
     eval { foo(); };
-    ok($@ =~ /calling memoized.cached subroutine main::foo in void context/, "die if memoized sub called in void context");
+    ok($@ =~ /calling memoized contracted subroutine main::foo in void context/, "die if memoized sub called in void context");
 
     # die even on second call with same (no) arguments
     eval { foo(); };
-    ok($@ =~ /calling memoized.cached subroutine main::foo in void context/, "die even on second call");
+    ok($@ =~ /calling memoized contracted subroutine main::foo in void context/, "die even on second call");
 }
 
 # scalar context with contract and memoization
