@@ -28,3 +28,8 @@ Revision history for Perl extension Sub::Contract
 0.06  2008-05-24
         - fixed broken dependency. thanks to Maddingue!
         - added benchmarking for inline variant
+
+0.07  2008-06-
+        - force context based on ->out()
+        - better validation of return values
+
