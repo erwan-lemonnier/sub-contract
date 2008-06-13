@@ -1,7 +1,7 @@
 #
 #   Sub::Contract::Compiler - Compile, enable and disable a contract
 #
-#   $Id: Compiler.pm,v 1.12 2008-05-24 20:40:34 erwan_lemonnier Exp $
+#   $Id: Compiler.pm,v 1.13 2008-06-13 14:48:53 erwan_lemonnier Exp $
 #
 
 package Sub::Contract::Compiler;
@@ -49,51 +49,42 @@ sub enable {
     }
 
     # compile code to validate pre and post constraints
-    my $code_pre  = _generate_code('before',
-				   $contractor,
-				   $validator_in,
-				   $check_in,
-				   $invariant,
-				   # a mapping to local variable names
-				   {
-				       contractor => "contractor",
-				       validator  => "validator_in",
-				       check      => "check_in",
-				       invariant  => "invariant",
-				       list_check => "list_checks_in",
-				       hash_check => "hash_checks_in",
-				   },
-				   );
+    my $str_pre  = _generate_code('before',
+				  $contractor,
+				  $validator_in,
+				  $check_in,
+				  $invariant,
+				  # a mapping to local variable names
+				  {
+				      contractor => "contractor",
+				      validator  => "validator_in",
+				      check      => "check_in",
+				      invariant  => "invariant",
+				      list_check => "list_checks_in",
+				      hash_check => "hash_checks_in",
+				  },
+				  );
 
-    my $code_post = _generate_code('after',
-				   $contractor,
-				   $validator_out,
-				   $check_out,
-				   $invariant,
-				   # a mapping to local variable names
-				   {
-				       contractor => "contractor",
-				       validator  => "validator_out",
-				       check      => "check_out",
-				       invariant  => "invariant",
-				       list_check => "list_checks_out",
-				       hash_check => "hash_checks_out",
-				   },
-				   );
+    my $str_post = _generate_code('after',
+				  $contractor,
+				  $validator_out,
+				  $check_out,
+				  $invariant,
+				  # a mapping to local variable names
+				  {
+				      contractor => "contractor",
+				      validator  => "validator_out",
+				      check      => "check_out",
+				      invariant  => "invariant",
+				      list_check => "list_checks_out",
+				      hash_check => "hash_checks_out",
+				  },
+				  );
 
     # find contractor's code ref
     my $cref = $self->contractor_cref;
 
-    # if caching is enabled, start with it
-    if (defined $cache) {
-    }
-
-
-
-
-    # wrap validation code around contracted sub
-
-
+    # add caching
     my $str_cache_enter         = "";
     my $str_cache_return_array  = "";
     my $str_cache_return_scalar = "";
@@ -127,18 +118,18 @@ sub enable {
 	};
     }
 
-    my $str_contract = sprintf q{
-	use Carp;
+    # the context in which the contracted sub is called depends on
+    # whether we have conditions on return values
+    my $str_call;
 
-	my $cref_pre = sub {
-	    %s
-	};
+    # TODO: those if ($cref_pre/post) could be removed
 
-	my $cref_post = sub {
-	    %s
-	};
+    if (!defined $validator_out) {
+	# there are no constraints on return arguments so we can't assume
+	# anything on the context the sub expects to be called in
+	# we therefore propagate the same context as the call to the contract
 
-	$contract = sub {
+	$str_call = sprintf q{
 
 	    local $Sub::Contract::wantarray = wantarray;
 
@@ -151,7 +142,7 @@ sub enable {
 
 	    if (!defined $Sub::Contract::wantarray) {
 		# void context
-		&$cref_pre() if ($cref_pre);  # TODO: those if ($cref_pre/post) could be removed
+		&$cref_pre() if ($cref_pre);
 		&$cref(@Sub::Contract::args);
 		@Sub::Contract::results = ();
 		&$cref_post(@Sub::Contract::results) if ($cref_post);
@@ -174,14 +165,127 @@ sub enable {
 		%s
 		return $s;
 	    }
+	},
+	$str_cache_enter,
+	$str_cache_return_array,
+	$str_cache_return_scalar;
+
+    } else {
+	# we have conditions set on the return values
+	# we have 3 cases:
+	my @checks = (@list_checks_out,%hash_checks_out);
+
+	if (scalar @checks == 0) {
+	    # the sub returns nothing. therefore it should
+	    # only be called in void context. anything else
+	    # is an error.
+
+	    # as a consequence, we shouldn't try caching this sub
+	    if ($cache) {
+		croak "trying to cache a sub that returns nothing (according to ->out())";
+	    }
+
+	    $str_call = sprintf q{
+
+		local $Sub::Contract::wantarray = wantarray;
+
+		if (defined $Sub::Contract::wantarray) {
+		    _croak "calling contracted subroutine %s in scalar or array context when its contract says it has no return values";
+		}
+
+		local @Sub::Contract::args = @_;
+		local @Sub::Contract::results = ();
+
+		# void context
+		&$cref_pre() if ($cref_pre);
+		&$cref(@Sub::Contract::args);
+		@Sub::Contract::results = ();
+		&$cref_post(@Sub::Contract::results) if ($cref_post);
+		return ();
+	    };
+
+	} elsif (scalar @checks == 1) {
+	    # the sub returns only 1 element.
+	    # we don't know though whether it returns a scalar
+	    # (most likely) or an array with just 1 element.
+	    # returning a 1-element array instead of a scalar
+	    # is a sign of bad programming so we just forbid
+	    # this case by raising an error if called in array
+	    # context.
+	    # otherwise, we call the sub in scalar context,
+	    # check the result and return it.
+
+	    $str_call = sprintf q{
+
+		local $Sub::Contract::wantarray = wantarray;
+
+		%s
+
+		# TODO: this code is not re-entrant. use local variables for args/wantarray/results. is local enough?
+
+		if ($Sub::Contract::wantarray) {
+		    _croak "calling contracted subroutine %s in array context when its contract says it returns a scalar";
+		}
+
+		local @Sub::Contract::args = @_;
+		local @Sub::Contract::results = ();
+
+		# call in scalar context, even if called from void context
+		&$cref_pre() if ($cref_pre);
+		@Sub::Contract::results = &$cref(@Sub::Contract::args);
+		&$cref_post() if ($cref_post);
+		%s
+		return @Sub::Contract::results;
+	    },
+	    $str_cache_enter,
+	    $str_cache_return_scalar;
+
+	} else {
+	    # the sub returns an array. we call it in array context,
+	    # check the conditions and return an array as well
+
+	    $str_call = sprintf q{
+
+		local $Sub::Contract::wantarray = wantarray;
+
+		%s
+
+		# TODO: this code is not re-entrant. use local variables for args/wantarray/results. is local enough?
+
+		local @Sub::Contract::args = @_;
+		local @Sub::Contract::results = ();
+
+		# call in array context, even if called from void or scalar context
+		&$cref_pre() if ($cref_pre);
+		my $s = &$cref(@Sub::Contract::args);
+		@Sub::Contract::results = ($s);
+		&$cref_post() if ($cref_post);
+		%s
+		return $s;
+	    },
+	    $str_cache_enter,
+	    $str_cache_return_array;
+	}
+    }
+
+    my $str_contract = sprintf q{
+	use Carp;
+
+	my $cref_pre = sub {
+	    %s
+	};
+
+	my $cref_post = sub {
+	    %s
+	};
+
+	$contract = sub {
+	    %s
 	}
     },
-    $code_pre,
-    $code_post,
-    $str_cache_enter,
-    $str_cache_return_array,
-    $str_cache_return_scalar;
-
+    $str_pre,
+    $str_post,
+    $str_call;
 
     # compile code
     $str_contract =~ s/^\s+//gm;
@@ -433,7 +537,7 @@ See 'Sub::Contract'.
 
 =head1 VERSION
 
-$Id: Compiler.pm,v 1.12 2008-05-24 20:40:34 erwan_lemonnier Exp $
+$Id: Compiler.pm,v 1.13 2008-06-13 14:48:53 erwan_lemonnier Exp $
 
 =head1 AUTHOR
 
