@@ -1,6 +1,6 @@
 #-------------------------------------------------------------------
 #
-#   $Id: 09_test_too_many_args.t,v 1.2 2008-05-07 09:08:21 erwan_lemonnier Exp $
+#   $Id: 09_test_too_many_args.t,v 1.3 2008-06-13 15:27:50 erwan_lemonnier Exp $
 #
 
 package main;
@@ -15,7 +15,7 @@ use Carp qw(croak);
 BEGIN {
 
     use check_requirements;
-    plan tests => 26;
+    plan tests => 41;
 
     use_ok("Sub::Contract",'contract');
 };
@@ -58,13 +58,29 @@ ok(!defined $@ || $@ eq "", "foo_none no args");
 eval { foo_none(12) };
 ok($@ =~ /got unexpected input argument\(s\)/, "foo_none unexpected input arguments");
 
+@res = ();
+eval { foo_none() };
+ok(!defined $@ || $@ eq "", "foo_none with 0 result values and void context");
+eval { my $s = foo_none() };
+ok($@ =~ /calling contracted subroutine main::foo_none in scalar or array context/, "foo_none with 0 result values and scalar context");
+eval { my @s = foo_none() };
+ok($@ =~ /calling contracted subroutine main::foo_none in scalar or array context/, "foo_none with 0 result values and array context");
+
+@res = (1);
+eval { foo_none() };
+ok($@ =~ /returned unexpected result value\(s\)/, "foo_none with 1 result values and void context");
+eval { my $s = foo_none() };
+ok($@ =~ /calling contracted subroutine main::foo_none in scalar or array context/, "foo_none with 1 result values and scalar context");
+eval { my @s = foo_none() };
+ok($@ =~ /calling contracted subroutine main::foo_none in scalar or array context/, "foo_none with 1 result values and array context");
+
 @res = (1,2);
 eval { foo_none() };
-ok(!defined $@ || $@ eq "", "foo_none with result values but void context");
+ok($@ =~ /returned unexpected result value\(s\)/, "foo_none with 2 result values and void context");
 eval { my $s = foo_none() };
-ok($@ =~ /returned unexpected result value\(s\)/, "foo_none unexpected result values (scalar context)");
+ok($@ =~ /calling contracted subroutine main::foo_none in scalar or array context/, "foo_none with 2 result values and scalar context");
 eval { my @s = foo_none() };
-ok($@ =~ /returned unexpected result value\(s\)/, "foo_none unexpected result values (array context)");
+ok($@ =~ /calling contracted subroutine main::foo_none in scalar or array context/, "foo_none with 2 result values and array context");
 
 # test foo_array
 eval { foo_array(3,4) };
@@ -76,18 +92,35 @@ ok(!defined $@ || $@ eq "", "foo_array 1 input arg");
 eval { foo_array(3,4,6) };
 ok($@ =~ /got unexpected input argument\(s\)/, "foo_array 3 input args");
 
+# we miss that the 2nd return value is missing. that's fine
+@res = (1);
+eval { foo_array() };
+ok(!defined $@ || $@ eq "", "foo_array with 1 result values and void context");
+eval { my $s = foo_array() };
+ok(!defined $@ || $@ eq "", "foo_array with 1 result values and scalar context");
+eval { my @s = foo_array() };
+ok(!defined $@ || $@ eq "", "foo_array with 1 result values and array context");
+
+@res = (1,2);
+eval { foo_array() };
+ok(!defined $@ || $@ eq "", "foo_array with 2 result values and void context");
+eval { my $s = foo_array() };
+ok(!defined $@ || $@ eq "", "foo_array with 2 result values and scalar context");
+eval { my @s = foo_array() };
+ok(!defined $@ || $@ eq "", "foo_array with 2 result values and array context");
+
 @res = (1,2,3);
 eval { foo_array() };
-ok(!defined $@ || $@ eq "", "foo_array with 3 result values but void context");
+ok($@ =~ /returned unexpected result value\(s\)/, "foo_array with 3 result values and void context");
 eval { my $s = foo_array() };
-ok(!defined $@ || $@ eq "", "foo_array with 3 result values but scalar context - ok in this particular case");
+ok($@ =~ /returned unexpected result value\(s\)/, "foo_array with 3 result values and scalar context");
 eval { my @s = foo_array() };
-ok($@ =~ /returned unexpected result value\(s\)/, "foo_array unexpected result values (array context)");
+ok($@ =~ /returned unexpected result value\(s\)/, "foo_array with 3 result values and array context");
 
 # test foo_hash
 @res = (c => 1, d => 2);
 eval { foo_hash(a => 1, b => 2) };
-ok(!defined $@ || $@ eq "", "foo_hash 2 input hash args");
+ok(!defined $@ || $@ eq "", "foo_hash 2 input hash args ($@)");
 
 eval { foo_hash(a => 1, bboo => 2) };
 ok($@ =~ /got unexpected input argument\(s\): bboo/, "foo_hash unexpected input args");
@@ -95,13 +128,22 @@ ok($@ =~ /got unexpected input argument\(s\): bboo/, "foo_hash unexpected input 
 eval { foo_hash(a => 1) };
 ok(!defined $@ || $@ eq "", "foo_hash only 1 input arg");
 
-@res = (c => 1, d => 2, poo => 5);
-eval { foo_none() };
-ok(!defined $@ || $@ eq "", "foo_hash with 3 result values but void context");
+# missing keys = ok
+@res = (c => 1);
+eval { foo_hash() };
+ok(!defined $@ || $@ eq "", "foo_hash with 1 result values and void context");
 eval { my $s = foo_hash() };
-ok($@ =~ /odd number of hash-style return arguments/, "foo_hash with 3 result values but scalar context");
+ok(!defined $@ || $@ eq "", "foo_hash with 1 result values and scalar context");
 eval { my @s = foo_hash() };
-ok($@ =~ /returned unexpected result value\(s\): poo/, "foo_none unexpected result values (array context)");
+ok(!defined $@ || $@ eq "", "foo_hash with 1 result values and array context");
+
+@res = (c => 1, d => 2, poo => 5);
+eval { foo_hash() };
+ok($@ =~ /returned unexpected result value\(s\): poo/, "foo_hash with 3 result values and void context");
+eval { my $s = foo_hash() };
+ok($@ =~ /returned unexpected result value\(s\): poo/, "foo_hash with 3 result values and scalar context");
+eval { my @s = foo_hash() };
+ok($@ =~ /returned unexpected result value\(s\): poo/, "foo_hash with 3 result values and array context");
 
 # just to improve coverage:
 eval { my $s = foo_hash(1,2,3) };
@@ -123,11 +165,11 @@ ok(!defined $@ || $@ eq "", "foo_mixed only 1 input arg");
 
 @res = (1,2,c => 1, d => 2, p => 5);
 eval { foo_mixed() };
-ok(!defined $@ || $@ eq "", "foo_mixed with 8 result values but void context");
+ok($@ =~ /returned unexpected result value\(s\): p/, "foo_mixed with 8 result values and void context");
 eval { my $s = foo_mixed() };
-ok(!defined $@ || $@ eq "", "foo_mixed with 8 result values but scalar context - ok in that case");
+ok($@ =~ /returned unexpected result value\(s\): p/, "foo_mixed with 8 result values and scalar context");
 eval { my @s = foo_mixed() };
-ok($@ =~ /returned unexpected result value\(s\)/, "foo_none unexpected result values (array context)");
+ok($@ =~ /returned unexpected result value\(s\): p/, "foo_mixed with 8 result values and array context");
 
 
 
