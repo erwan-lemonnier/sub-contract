@@ -1,7 +1,7 @@
 #
 #   Sub::Contract::Compiler - Compile, enable and disable a contract
 #
-#   $Id: Compiler.pm,v 1.13 2008-06-13 14:48:53 erwan_lemonnier Exp $
+#   $Id: Compiler.pm,v 1.14 2008-06-13 15:28:30 erwan_lemonnier Exp $
 #
 
 package Sub::Contract::Compiler;
@@ -198,11 +198,11 @@ sub enable {
 
 		# void context
 		&$cref_pre() if ($cref_pre);
-		&$cref(@Sub::Contract::args);
-		@Sub::Contract::results = ();
-		&$cref_post(@Sub::Contract::results) if ($cref_post);
+		@Sub::Contract::results = &$cref(@Sub::Contract::args);
+		&$cref_post() if ($cref_post);
 		return ();
-	    };
+	    },
+	    $contractor;
 
 	} elsif (scalar @checks == 1) {
 	    # the sub returns only 1 element.
@@ -232,12 +232,15 @@ sub enable {
 
 		# call in scalar context, even if called from void context
 		&$cref_pre() if ($cref_pre);
-		@Sub::Contract::results = &$cref(@Sub::Contract::args);
+		my $s = &$cref(@Sub::Contract::args);
+		@Sub::Contract::results = ($s);
 		&$cref_post() if ($cref_post);
 		%s
-		return @Sub::Contract::results;
+		return $s;
+
 	    },
 	    $str_cache_enter,
+	    $contractor,
 	    $str_cache_return_scalar;
 
 	} else {
@@ -257,11 +260,11 @@ sub enable {
 
 		# call in array context, even if called from void or scalar context
 		&$cref_pre() if ($cref_pre);
-		my $s = &$cref(@Sub::Contract::args);
-		@Sub::Contract::results = ($s);
+		@Sub::Contract::results = &$cref(@Sub::Contract::args);
 		&$cref_post() if ($cref_post);
 		%s
-		return $s;
+		return @Sub::Contract::results;
+
 	    },
 	    $str_cache_enter,
 	    $str_cache_return_array;
@@ -537,7 +540,7 @@ See 'Sub::Contract'.
 
 =head1 VERSION
 
-$Id: Compiler.pm,v 1.13 2008-06-13 14:48:53 erwan_lemonnier Exp $
+$Id: Compiler.pm,v 1.14 2008-06-13 15:28:30 erwan_lemonnier Exp $
 
 =head1 AUTHOR
 
