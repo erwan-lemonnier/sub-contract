@@ -1,0 +1,12 @@
+.*CVS.*
+.bak$
+~$
+\#
+.*gz
+.*blib.*
+^Makefile$
+^Makefile\.old$
+tag_all.pl
+make_all.sh
+MANIFEST.SKIP
+filter-wrapsub.*
