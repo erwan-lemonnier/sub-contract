@@ -2,7 +2,7 @@
 #
 #   Sub::Contract - Programming by contract and memoizing in one
 #
-#   $Id: Contract.pm,v 1.21 2008-05-24 20:40:34 erwan_lemonnier Exp $
+#   $Id: Contract.pm,v 1.22 2008-06-16 06:07:54 erwan_lemonnier Exp $
 #
 
 package Sub::Contract;
@@ -28,7 +28,7 @@ our @EXPORT_OK = qw( contract
 		     is_a
 		     );
 
-our $VERSION = '0.06';
+our $VERSION = '0.07';
 
 my $pool = Sub::Contract::Pool::get_contract_pool();
 
@@ -114,7 +114,7 @@ sub new {
     croak "new() expects a subroutine name as first argument" if (!defined $fullname);
     croak "new() got unknown arguments: ".Dumper(%args) if (keys %args != 0);
 
-    # TODO: test for contractor existence here
+    # identify the subroutine to contract and make sure it exists
     my $contractor_cref;
     my $contractor;
 
@@ -225,7 +225,7 @@ sub _set_in_out {
 	$pos += 2;
     }
 
-    # everything ok!perl 06
+    # everything ok!
     $self->{$type} = $validator;
     return $self;
 }
@@ -294,22 +294,6 @@ sub contractor_cref {
 
 # TODO: implement return?
 
-# contract('my_func')
-#     ->invariant( sub { die "blah" if (ref $_[0] ne 'blob'); } )
-#     ->in(prsid => \&check1,
-#          fndid => \&check2,
-#     )->out(\&is_boolean)
-#     ->memoize( max => 1000 );
-#
-# or
-#     ->cache( size => 1000 );
-#
-# sub my_func {}
-#
-# my $pool = Sub::Contract::Pool::get_pool;
-# $pool->enable_all_contracts;
-
-
 1;
 
 __END__
@@ -320,36 +304,60 @@ Sub::Contract - Pragmatic contract programming for Perl
 
 =head1 SYNOPSIS
 
-To contract a function 'divid' that accepts a hash of 2 integer values
-and returns a list of 2 integer values:
+First of all, you should define a library of pseudo-type constraints. A type
+constraint is a subroutine that returns true if the argument if of the right
+type, and returns false or croaks if not. Example:
 
-    contract('divid')
-        ->in(a => sub { defined $_ && $_ =~ /^\d+$/},
-             b => sub { defined $_ && $_ =~ /^\d+$/},
-            )
-        ->out(sub { defined $_ && $_ =~ /^\d+$/},
-              sub { defined $_ && $_ =~ /^\d+$/},
-             )
+    use Regexp::Common;
+
+    # test that variable is an integer
+    sub is_integer {
+        my $i = shift;
+        croak "undefined integer"       if (!defined $i);
+        croak "integer is not a scalar" if (ref $i ne "");
+        croak "not an integer"          if ($i !~ /^$RE{num}{int}$/);
+        return 1;
+    }
+
+To contract a function 'surface' that takes a list of 2 integers and returns 1: 
+
+    use Sub::Contract qw(contract);
+
+    contract('surface')
+        ->in(\&is_integer, \&is_integer)
+        ->out(\&is_integer)
         ->enable;
 
-    sub divid {
+    sub surface {
+        # no need to validate arguments. just implement the logic
+	return $_[0]* $_[1];
+    }
+
+If 'surface' was to take a hash of 2 integers instead:
+
+    use Sub::Contract qw(contract);
+
+
+--------------------------------------------
+
+
+    contract('surface')
+        ->in(height => \&is_integer, width => \&is_integer)
+        ->out(\&is_integer)
+        ->enable;
+
+    sub surface {
 	my %args = @_;
 	return ( int($args{a} / $args{b}), $args{a} % $args{b} );
     }
 
-Or, if you have a function C<is_integer>:
-
-    contract('divid')
-        ->in(a => \&is_integer,
-             b => \&is_integer,
-            )
-        ->out(\&is_integer, \&is_integer);
-        ->enable;
 
 If C<divid> was a method of an instance of 'Maths::Integer':
 
+    use Sub::Contract qw(contract is_a);
+
     contract('divid')
-        ->in(sub { defined $_ && ref $_ eq 'Maths::Integer' },
+        ->in(is_a('Maths::Integer'),
              a => \&is_integer,
              b => \&is_integer,
             )
@@ -903,7 +911,7 @@ See 'Issues with contract programming' under 'Discussion'.
 
 =head1 VERSION
 
-$Id: Contract.pm,v 1.21 2008-05-24 20:40:34 erwan_lemonnier Exp $
+$Id: Contract.pm,v 1.22 2008-06-16 06:07:54 erwan_lemonnier Exp $
 
 =head1 AUTHORS
 
