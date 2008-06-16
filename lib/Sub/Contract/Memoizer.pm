@@ -2,7 +2,7 @@
 #
 #   Sub::Contract::Memoizer - Implement the memoizing behaviour of a contract
 #
-#   $Id: Memoizer.pm,v 1.4 2008-06-16 14:10:03 erwan_lemonnier Exp $
+#   $Id: Memoizer.pm,v 1.5 2008-06-16 14:49:03 erwan_lemonnier Exp $
 #
 
 package Sub::Contract::Memoizer;
@@ -120,7 +120,11 @@ See 'Sub::Contract'.
 
 =item C<< $contract->cache([size => $max_size]) >>
 
+TODO
+
 =item C<< $contract->has_cache([size => $max_size]) >>
+
+TODO
 
 =item C<< $contract->get_cache >>
 
@@ -128,7 +132,11 @@ Returns the instance of Cache used by this contract.
 
 =item C<< $contract->clear_cache >>
 
+TODO
+
 =item C<< $contract->add_to_cache(\@args, \@results) >>
+
+TODO
 
 =back
 
@@ -138,7 +146,7 @@ See 'Sub::Contract'.
 
 =head1 VERSION
 
-$Id: Memoizer.pm,v 1.4 2008-06-16 14:10:03 erwan_lemonnier Exp $
+$Id: Memoizer.pm,v 1.5 2008-06-16 14:49:03 erwan_lemonnier Exp $
 
 =head1 AUTHOR
 

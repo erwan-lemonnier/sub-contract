@@ -33,3 +33,4 @@ Revision history for Perl extension Sub::Contract
         - force calling context based on ->out()
         - better validation of return values
         - pod++
+        - smarter compiler

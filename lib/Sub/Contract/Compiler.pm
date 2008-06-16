@@ -1,7 +1,7 @@
 #
 #   Sub::Contract::Compiler - Compile, enable and disable a contract
 #
-#   $Id: Compiler.pm,v 1.15 2008-06-16 14:10:03 erwan_lemonnier Exp $
+#   $Id: Compiler.pm,v 1.16 2008-06-16 14:49:03 erwan_lemonnier Exp $
 #
 
 package Sub::Contract::Compiler;
@@ -539,8 +539,8 @@ See 'Sub::Contract'.
 =head1 DESCRIPTION
 
 Subroutine contracts defined with Sub::Contract must be compiled
-and enabled in order to start applying onto the contractor. A
-contractor can even be disabled later on, or recompiled after
+and enabled in order to start applying on the contractor. A
+contract can be enabled then disabled, or recompiled after
 changes. Those methods are implemented in Sub::Contract::Compiler
 and inherited by Sub::Contract.
 
@@ -570,7 +570,7 @@ See 'Sub::Contract'.
 
 =head1 VERSION
 
-$Id: Compiler.pm,v 1.15 2008-06-16 14:10:03 erwan_lemonnier Exp $
+$Id: Compiler.pm,v 1.16 2008-06-16 14:49:03 erwan_lemonnier Exp $
 
 =head1 AUTHOR
 
