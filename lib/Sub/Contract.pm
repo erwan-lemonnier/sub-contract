@@ -2,7 +2,7 @@
 #
 #   Sub::Contract - Programming by contract and memoizing in one
 #
-#   $Id: Contract.pm,v 1.22 2008-06-16 06:07:54 erwan_lemonnier Exp $
+#   $Id: Contract.pm,v 1.23 2008-06-16 14:10:03 erwan_lemonnier Exp $
 #
 
 package Sub::Contract;
@@ -313,13 +313,13 @@ type, and returns false or croaks if not. Example:
     # test that variable is an integer
     sub is_integer {
         my $i = shift;
-        croak "undefined integer"       if (!defined $i);
-        croak "integer is not a scalar" if (ref $i ne "");
-        croak "not an integer"          if ($i !~ /^$RE{num}{int}$/);
+        return 0 if (!defined $i);
+        return 0 if (ref $i ne "");
+        return 0 if ($i !~ /^$RE{num}{int}$/);
         return 1;
     }
 
-To contract a function 'surface' that takes a list of 2 integers and returns 1: 
+To contract a function 'surface' that takes a list of 2 integers and returns 1:
 
     use Sub::Contract qw(contract);
 
@@ -333,13 +333,9 @@ To contract a function 'surface' that takes a list of 2 integers and returns 1:
 	return $_[0]* $_[1];
     }
 
-If 'surface' was to take a hash of 2 integers instead:
+If 'surface' took a hash of 2 integers instead:
 
     use Sub::Contract qw(contract);
-
-
---------------------------------------------
-
 
     contract('surface')
         ->in(height => \&is_integer, width => \&is_integer)
@@ -348,30 +344,29 @@ If 'surface' was to take a hash of 2 integers instead:
 
     sub surface {
 	my %args = @_;
-	return ( int($args{a} / $args{b}), $args{a} % $args{b} );
+	return $args{height}* $args{width};
     }
 
-
-If C<divid> was a method of an instance of 'Maths::Integer':
+If C<surface> was a method of an instance of 'Maths::Geometry':
 
     use Sub::Contract qw(contract is_a);
 
-    contract('divid')
-        ->in(is_a('Maths::Integer'),
-             a => \&is_integer,
-             b => \&is_integer,
+    contract('surface')
+        ->in(is_a('Maths::Geometry'),
+             height => \&is_integer,
+             width  => \&is_integer,
             )
-        ->out(\&is_integer, \&is_integer);
+        ->out(\&is_integer)
         ->enable;
 
 Or if you don't want to do any check on the type of self:
 
-    contract('divid')
+    contract('surface')
          ->in(undef,
-              a => \&is_integer,
-              b => \&is_integer,
+              height => \&is_integer,
+              width  => \&is_integer,
              )
-        ->out(\&is_integer, \&is_integer);
+        ->out(\&is_integer)
         ->enable;
 
 You can also declare invariants, pre- and post-conditions as in
@@ -398,11 +393,14 @@ by contract paradigm in Perl.
 
 Sub::Contract is not a design-by-contract framework.
 
+Sub::Contract is designed to make it very easy to constrain subroutines input
+arguments and return values.
+
 Perl is a weakly typed language in which variables have a dynamic content
 at runtime. A feature often wished for in such circumstances is a way
 to define constraints on a subroutine's arguments and on its
 return values. A constraint is basically a test that the specific argument
-has to pass otherwise we croak.
+has to pass.
 
 For example, a subroutine C<add()> that takes 2 integers and return their
 sum could have constraints on both input arguments and on the return value
@@ -911,7 +909,7 @@ See 'Issues with contract programming' under 'Discussion'.
 
 =head1 VERSION
 
-$Id: Contract.pm,v 1.22 2008-06-16 06:07:54 erwan_lemonnier Exp $
+$Id: Contract.pm,v 1.23 2008-06-16 14:10:03 erwan_lemonnier Exp $
 
 =head1 AUTHORS
 

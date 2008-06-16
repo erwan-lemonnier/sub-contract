@@ -1,7 +1,7 @@
 #
 #   Sub::Contract::Compiler - Compile, enable and disable a contract
 #
-#   $Id: Compiler.pm,v 1.14 2008-06-13 15:28:30 erwan_lemonnier Exp $
+#   $Id: Compiler.pm,v 1.15 2008-06-16 14:10:03 erwan_lemonnier Exp $
 #
 
 package Sub::Contract::Compiler;
@@ -12,6 +12,8 @@ use Carp qw(croak confess);
 use Data::Dumper;
 use Sub::Contract::Debug qw(debug);
 use Sub::Name;
+
+our $VERSION = '0.07';
 
 #---------------------------------------------------------------
 #
@@ -81,6 +83,21 @@ sub enable {
 				  },
 				  );
 
+    my $str_call_pre = "";
+    my $str_call_post = "";
+
+    if ($str_pre) {
+	$str_call_pre = q{
+	    &$cref_pre();
+	};
+    }
+
+    if ($str_post) {
+	$str_call_post = q{
+	    &$cref_post();
+	};
+    }
+
     # find contractor's code ref
     my $cref = $self->contractor_cref;
 
@@ -142,32 +159,38 @@ sub enable {
 
 	    if (!defined $Sub::Contract::wantarray) {
 		# void context
-		&$cref_pre() if ($cref_pre);
+		%s
 		&$cref(@Sub::Contract::args);
 		@Sub::Contract::results = ();
-		&$cref_post(@Sub::Contract::results) if ($cref_post);
+		%s
 		return ();
 
 	    } elsif ($Sub::Contract::wantarray) {
 		# array context
-		&$cref_pre() if ($cref_pre);
+		%s
 		@Sub::Contract::results = &$cref(@Sub::Contract::args);
-		&$cref_post() if ($cref_post);
+		%s
 		%s
 		return @Sub::Contract::results;
 
 	    } else {
 		# scalar context
-		&$cref_pre() if ($cref_pre);
+		%s
 		my $s = &$cref(@Sub::Contract::args);
 		@Sub::Contract::results = ($s);
-		&$cref_post() if ($cref_post);
+		%s
 		%s
 		return $s;
 	    }
 	},
 	$str_cache_enter,
+	$str_call_pre,
+	$str_call_post,
+	$str_call_pre,
+	$str_call_post,
 	$str_cache_return_array,
+	$str_call_pre,
+	$str_call_post,
 	$str_cache_return_scalar;
 
     } else {
@@ -180,7 +203,7 @@ sub enable {
 	    # only be called in void context. anything else
 	    # is an error.
 
-	    # as a consequence, we shouldn't try caching this sub
+	    # we shouldn't try caching this sub
 	    if ($cache) {
 		croak "trying to cache a sub that returns nothing (according to ->out())";
 	    }
@@ -196,13 +219,16 @@ sub enable {
 		local @Sub::Contract::args = @_;
 		local @Sub::Contract::results = ();
 
-		# void context
-		&$cref_pre() if ($cref_pre);
+		# void context, but we call the sub in array context to check if we get something back
+		# (if we do, it's an error)
+		%s
 		@Sub::Contract::results = &$cref(@Sub::Contract::args);
-		&$cref_post() if ($cref_post);
+		%s
 		return ();
 	    },
-	    $contractor;
+	    $contractor,
+	    $str_call_pre,
+	    $str_call_post;
 
 	} elsif (scalar @checks == 1) {
 	    # the sub returns only 1 element.
@@ -231,16 +257,18 @@ sub enable {
 		local @Sub::Contract::results = ();
 
 		# call in scalar context, even if called from void context
-		&$cref_pre() if ($cref_pre);
+		%s
 		my $s = &$cref(@Sub::Contract::args);
 		@Sub::Contract::results = ($s);
-		&$cref_post() if ($cref_post);
+		%s
 		%s
 		return $s;
 
 	    },
 	    $str_cache_enter,
 	    $contractor,
+	    $str_call_pre,
+	    $str_call_post,
 	    $str_cache_return_scalar;
 
 	} else {
@@ -259,14 +287,16 @@ sub enable {
 		local @Sub::Contract::results = ();
 
 		# call in array context, even if called from void or scalar context
-		&$cref_pre() if ($cref_pre);
+		%s
 		@Sub::Contract::results = &$cref(@Sub::Contract::args);
-		&$cref_post() if ($cref_post);
+		%s
 		%s
 		return @Sub::Contract::results;
 
 	    },
 	    $str_cache_enter,
+	    $str_call_pre,
+	    $str_call_post,
 	    $str_cache_return_array;
 	}
     }
@@ -540,7 +570,7 @@ See 'Sub::Contract'.
 
 =head1 VERSION
 
-$Id: Compiler.pm,v 1.14 2008-06-13 15:28:30 erwan_lemonnier Exp $
+$Id: Compiler.pm,v 1.15 2008-06-16 14:10:03 erwan_lemonnier Exp $
 
 =head1 AUTHOR
 
