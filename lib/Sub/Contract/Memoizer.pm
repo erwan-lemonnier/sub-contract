@@ -2,7 +2,7 @@
 #
 #   Sub::Contract::Memoizer - Implement the memoizing behaviour of a contract
 #
-#   $Id: Memoizer.pm,v 1.6 2008-06-17 12:30:33 erwan_lemonnier Exp $
+#   $Id: Memoizer.pm,v 1.7 2008-06-17 12:33:06 erwan_lemonnier Exp $
 #
 
 package Sub::Contract::Memoizer;
@@ -53,7 +53,7 @@ sub _incr_hit {
 END {
     if ($CACHE_STATS_ON) {
 	print "------------------------------------------------------\n";
-	print "Statistics from Sub::Contract's function cache:\n";
+	print "Statistics from Sub::Contract's function result cache:\n";
 	foreach my $func (sort keys %CACHE_STATS) {
 	    my $hits = $CACHE_STATS{$func}->{hits};
 	    my $calls = $CACHE_STATS{$func}->{calls};
@@ -194,7 +194,7 @@ See 'Sub::Contract'.
 
 =head1 VERSION
 
-$Id: Memoizer.pm,v 1.6 2008-06-17 12:30:33 erwan_lemonnier Exp $
+$Id: Memoizer.pm,v 1.7 2008-06-17 12:33:06 erwan_lemonnier Exp $
 
 =head1 AUTHOR
 
