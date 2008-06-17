@@ -35,5 +35,7 @@ Revision history for Perl extension Sub::Contract
         - pod++
         - smarter compiler
 
-0.08  2008-06-
+0.08  2008-06-17
         - pod++
+        - better error messages
+        - implemented cache profiler

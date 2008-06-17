@@ -2,7 +2,7 @@
 #
 #   Sub::Contract - Programming by contract and memoizing in one
 #
-#   $Id: Contract.pm,v 1.25 2008-06-16 19:43:15 erwan_lemonnier Exp $
+#   $Id: Contract.pm,v 1.26 2008-06-17 12:30:32 erwan_lemonnier Exp $
 #
 
 package Sub::Contract;
@@ -28,7 +28,7 @@ our @EXPORT_OK = qw( contract
 		     is_a
 		     );
 
-our $VERSION = '0.07';
+our $VERSION = '0.08';
 
 my $pool = Sub::Contract::Pool::get_contract_pool();
 
@@ -586,11 +586,6 @@ heavier syntax if you are only seeking to emulate strong typing at runtime.
 
 Class::Agreement does not provide memoization from within the contract.
 
-TODO: compare with Argument::Validate
-TODO: more description
-TODO: how to enable contracts -> enable on each contract, or via the pool
-TODO: validation code should not change @_, else weird bugs...
-
 =back
 
 =head1 OBJECT API
@@ -634,7 +629,7 @@ located in package C<$package>.
 
 =item C<< $contract->invariant($coderef) >>
 
-Execute C<$coderef> both before and after calling the contractor. Returns the contract.
+Execute C<$coderef> both before and after calling the contractor. Return the contract.
 
 C<$coderef> gets in arguments the arguments passed to the contractor,
 both when called before and after calling the contractor.
@@ -660,7 +655,7 @@ instead.
 =item C<< $contract->pre($coderef) >>
 
 Same as C<invariant> but executes C<$coderef> only before calling the
-contractor. Returns the contract.
+contractor. Return the contract.
 
 C<$coderef> gets in arguments the arguments passed to the contractor.
 C<$coderef> should return 1 if the condition passes and 0 if it fails.
@@ -671,7 +666,7 @@ instead.
 =item C<< $contract->post($coderef) >>
 
 Similar to C<pre> but executes C<$coderef> when returning from calling
-the contractor. Returns the contract.
+the contractor. Return the contract.
 
 C<$coderef> gets in arguments the return values from the contractor,
 eventually altered by the context (meaning C<()> if called in void
@@ -684,7 +679,7 @@ instead.
 
 =item C<< $contract->in(@checks) >>
 
-Validate each input argument of the contractor one by one. Returns the contract.
+Validate each input argument of the contractor one by one. Return the contract.
 
 C<@checks> specifies which constraint should be called
 for each input argument. The syntax of C<@checks> supports arguments
@@ -714,7 +709,7 @@ being checked:
 
     # method perimeter on obect MyCircle expects no
     # arguments, but method color expects a color code
-  
+
     contract('perimeter')->in(undef)->enable;
 
     contract('color')
@@ -762,7 +757,7 @@ C<undef_or> (see further down).
 
 =item C<< $contract->out(@checks) >>
 
-Same as C<in> but for validating return arguments one by one. Returns the contract.
+Same as C<in> but for validating return arguments one by one. Return the contract.
 
 The syntax of C<@checks> is the same as for C<in()>.
 
@@ -804,22 +799,12 @@ As you can see from the cases above, the only situation when Sub::Contract
 respects the calling context is when C<out()> has not been called to specify
 any constraints on return values.
 
-=item C<< $contract->memoize >>
-
-Enable memoization of the contractor's results. Returns the contract.
-
-TODO: detail arguments
-
-=item C<< $contract->flush_cache >>
-
-Empty the contractor's cache of memoized results.
-
 =item C<< $contract->enable >>
 
 Compile and enable a contract. If the contract is already enabled, it is
 first disabled, then re-compiled and enabled.
 
-Returns the contract.
+Return the contract.
 
 Enabling the contract consists in dynamically generating
 some code that validates the contract before and after calls to the
@@ -828,7 +813,7 @@ contractor and wrapping this code around the contractor.
 =item C<< $contract->disable >>
 
 Disable the contract: remove the wrapper code generated and added by C<enable>
-from around the contractor. Returns the contract.
+from around the contractor. Return the contract.
 
 =item C<< $contract->is_enabled >>
 
@@ -848,6 +833,44 @@ Remove all previously defined constraints from this contract and disable
 memoization. C<reset> has no effect on the contract validation code as long as you
 don't call C<enable> after C<reset>. C<reset> is usefull if you want to
 redefine a contract from scratch during runtime.
+
+=back
+
+=head1 MEMOIZING
+
+Contract objects provide implement memoization with the following methods:
+
+=over 4
+
+=item C<< $contract->cache(size => $s) >>
+
+Enable memoization of the contractor's results. Return the contract.
+
+The cache itself is implemented as an instance of Cache::Memory.
+If C<size> is set, the maximum memory size of the underlying instance of
+Cache::Memory is set to C<$s> bytes. If C<size> is omitted, this
+maximum cache size defaults to 10 mega bytes.
+
+=item C<< $contract->clear_cache >>
+
+Empty the contractor's cache of memoized results.
+Return the contract.
+
+=item C<< $contract->has_cache >>
+
+Return 1 if the contractor is memoized. Return 0 if not.
+
+=item C<< $contract->get_cache >>
+
+Return the underlying Cache object used to cache this contract's contractor.
+Return undef if the contractor is not memoized.
+
+=item C<< $contract->add_to_cache(\@args,\@results) >>
+
+Add an entry to the contractor's cache telling that the input arguments C<@args>
+should yield the results C<@results>.
+Dies if the contractor is not memoized.
+Return the contract.
 
 =back
 
@@ -979,6 +1002,15 @@ arguments and C<< 'happy' >> if it gets some:
 	     }
         )->enable;
 
+=head1 CACHE PROFILER
+
+To turn on the cache profiler, just set the environment variable PERL5SUBCONTRACTSTATS to 1:
+
+    export PERL5SUBCONTRACTSTATS=1
+
+When the program stops, Sub::Contract will then print a text report to STDOUT showing the cache
+hit ratio for every memoized subroutine in the program.
+
 =head1 SEE ALSO
 
 See Carp::Datum, Class::Agreement, Class::Contract.
@@ -996,7 +1028,7 @@ Please submit bugs to rt.cpan.org.
 
 =head1 VERSION
 
-$Id: Contract.pm,v 1.25 2008-06-16 19:43:15 erwan_lemonnier Exp $
+$Id: Contract.pm,v 1.26 2008-06-17 12:30:32 erwan_lemonnier Exp $
 
 =head1 AUTHORS
 
