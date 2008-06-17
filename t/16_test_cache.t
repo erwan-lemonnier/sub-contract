@@ -1,6 +1,6 @@
 #-------------------------------------------------------------------
 #
-#   $Id: 16_test_cache.t,v 1.2 2008-06-17 11:31:43 erwan_lemonnier Exp $
+#   $Id: 16_test_cache.t,v 1.3 2008-06-17 12:10:58 erwan_lemonnier Exp $
 #
 
 package main;
@@ -90,7 +90,7 @@ while (@tests) {
 
 # key contain references
 eval { my $a = foo_scalar({1,2,3,4},3); };
-ok($@ =~ /cannot memoize result when input arguments contain references/, "contract fail if args contain references");
+ok($@ =~ /cannot memoize result of main::foo_scalar when input arguments contain references/, "contract fail if args contain references");
 
 # wrong context
 eval { foo_scalar(3,3); };
