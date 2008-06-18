@@ -1,6 +1,6 @@
 #-------------------------------------------------------------------
 #
-#   $Id: 16_test_cache.t,v 1.4 2008-06-18 14:02:31 erwan_lemonnier Exp $
+#   $Id: 16_test_cache.t,v 1.5 2008-06-18 20:19:55 erwan_lemonnier Exp $
 #
 
 package main;
@@ -14,7 +14,7 @@ use Data::Dumper;
 BEGIN {
 
     use check_requirements;
-    plan tests => 27;
+    plan tests => 30;
 
     use_ok("Sub::Contract",'contract');
 };
@@ -115,5 +115,21 @@ is_deeply(\%r1, {a => 1, b => 2}, "calling pif twice");
 
 %r1 = paf(1,2,3);
 is_deeply(\%r1, {a => "boum"}, "calling paf. got paf's answer and not pif's");
+
+# test cache versus context
+contract("bim")->cache->enable;
+my @ret;
+sub bim { return @ret; }
+
+@ret = ("abc","123");
+
+my @res = bim();
+is_deeply(\@res,["abc","123"],"first get, array context");
+@ret = (1,2,3,4);
+@res = bim();
+is_deeply(\@res,["abc","123"],"second get, array context");
+
+my $res = bim();
+is($res,4,"third get, scalar context: yield new value");
 
 # TODO: fill cache heavily
