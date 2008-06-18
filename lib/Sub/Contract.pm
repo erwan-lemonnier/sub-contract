@@ -2,7 +2,7 @@
 #
 #   Sub::Contract - Programming by contract and memoizing in one
 #
-#   $Id: Contract.pm,v 1.28 2008-06-18 14:22:47 erwan_lemonnier Exp $
+#   $Id: Contract.pm,v 1.29 2008-06-18 20:14:07 erwan_lemonnier Exp $
 #
 
 package Sub::Contract;
@@ -543,7 +543,7 @@ This means that you SHOULD NOT CONTRACT a subroutine that relies on C<wantarray>
 or is calling-context sensitive. And if you really have to contract such a subroutine,
 do not specify any constraints on its return values with C<< ->out() >>.
 
-See C<< ->out() >> for a details.
+See C<< ->out() >> for details.
 
 =head2 Issues with contract programming
 
@@ -1057,7 +1057,7 @@ Please submit bugs to rt.cpan.org.
 
 =head1 VERSION
 
-$Id: Contract.pm,v 1.28 2008-06-18 14:22:47 erwan_lemonnier Exp $
+$Id: Contract.pm,v 1.29 2008-06-18 20:14:07 erwan_lemonnier Exp $
 
 =head1 AUTHORS
 
