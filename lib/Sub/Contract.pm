@@ -2,7 +2,7 @@
 #
 #   Sub::Contract - Programming by contract and memoizing in one
 #
-#   $Id: Contract.pm,v 1.26 2008-06-17 12:30:32 erwan_lemonnier Exp $
+#   $Id: Contract.pm,v 1.27 2008-06-18 14:02:31 erwan_lemonnier Exp $
 #
 
 package Sub::Contract;
@@ -28,7 +28,7 @@ our @EXPORT_OK = qw( contract
 		     is_a
 		     );
 
-our $VERSION = '0.08';
+our $VERSION = '0.09';
 
 my $pool = Sub::Contract::Pool::get_contract_pool();
 
@@ -1028,7 +1028,7 @@ Please submit bugs to rt.cpan.org.
 
 =head1 VERSION
 
-$Id: Contract.pm,v 1.26 2008-06-17 12:30:32 erwan_lemonnier Exp $
+$Id: Contract.pm,v 1.27 2008-06-18 14:02:31 erwan_lemonnier Exp $
 
 =head1 AUTHORS
 
