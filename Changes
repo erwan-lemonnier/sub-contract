@@ -42,3 +42,6 @@ Revision history for Perl extension Sub::Contract
 
 0.09  2008-06-18
         - fix shared cache bug
+
+0.10  
+        - pod++

@@ -2,7 +2,7 @@
 #
 #   Sub::Contract - Programming by contract and memoizing in one
 #
-#   $Id: Contract.pm,v 1.29 2008-06-18 20:14:07 erwan_lemonnier Exp $
+#   $Id: Contract.pm,v 1.30 2008-08-28 21:35:38 erwan_lemonnier Exp $
 #
 
 package Sub::Contract;
@@ -345,7 +345,7 @@ we may want to memoize (cache) it:
     contract('surface')
         ->in(\&is_integer, \&is_integer)
         ->out(\&is_integer)
-        ->memoize
+        ->cache
         ->enable;
 
 If 'surface' took a hash of 2 integers instead, with the keys 'height' and 'width':
@@ -1057,7 +1057,7 @@ Please submit bugs to rt.cpan.org.
 
 =head1 VERSION
 
-$Id: Contract.pm,v 1.29 2008-06-18 20:14:07 erwan_lemonnier Exp $
+$Id: Contract.pm,v 1.30 2008-08-28 21:35:38 erwan_lemonnier Exp $
 
 =head1 AUTHORS
 
