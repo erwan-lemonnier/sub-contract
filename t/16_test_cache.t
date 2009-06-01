@@ -1,6 +1,6 @@
 #-------------------------------------------------------------------
 #
-#   $Id: 16_test_cache.t,v 1.5 2008-06-18 20:19:55 erwan_lemonnier Exp $
+#   $Id: 16_test_cache.t,v 1.6 2009-06-01 20:43:06 erwan_lemonnier Exp $
 #
 
 package main;
@@ -14,7 +14,7 @@ use Data::Dumper;
 BEGIN {
 
     use check_requirements;
-    plan tests => 30;
+    plan tests => 51;
 
     use_ok("Sub::Contract",'contract');
 };
@@ -81,10 +81,19 @@ while (@tests) {
 	@results = @{$res};
 	my @a = foo_array(@$args);
 	is_deeply(\@a,$want,"\@{foo(".join(",",@$args).")} = (".join(",",@$want).")");
+
+	@results = ();
+	@a = foo_array(@$args);
+	is_deeply(\@a,$want,"same but from cache");
+
     } else {
 	$results = $res;
 	my $a = foo_scalar(@$args);
 	is_deeply($a,$want,"\${foo(".join(",",@$args).")} = ".$want);
+
+	$results = undef;
+	$a = foo_scalar(@$args);
+	is_deeply($a,$want,"same but from cache");
     }
 }
 

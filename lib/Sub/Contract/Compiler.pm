@@ -1,7 +1,7 @@
 #
 #   Sub::Contract::Compiler - Compile, enable and disable a contract
 #
-#   $Id: Compiler.pm,v 1.18 2008-06-18 14:02:31 erwan_lemonnier Exp $
+#   $Id: Compiler.pm,v 1.19 2009-06-01 20:43:06 erwan_lemonnier Exp $
 #
 
 package Sub::Contract::Compiler;
@@ -117,7 +117,7 @@ sub enable {
 	    }
 
 	    my $key = join(":", map( { (defined $_) ? $_ : "undef"; } ( ($Sub::Contract::wantarray) ? "array":"scalar"),@_));
-	    if ($cache->exists($key)) {
+	    if ($cache->has($key)) {
 		%s
                 if ($Sub::Contract::wantarray) {
 		    return @{$cache->get($key)};
@@ -595,7 +595,7 @@ See 'Sub::Contract'.
 
 =head1 VERSION
 
-$Id: Compiler.pm,v 1.18 2008-06-18 14:02:31 erwan_lemonnier Exp $
+$Id: Compiler.pm,v 1.19 2009-06-01 20:43:06 erwan_lemonnier Exp $
 
 =head1 AUTHOR
 

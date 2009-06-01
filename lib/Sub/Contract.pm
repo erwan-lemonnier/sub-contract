@@ -2,7 +2,7 @@
 #
 #   Sub::Contract - Programming by contract and memoizing in one
 #
-#   $Id: Contract.pm,v 1.30 2008-08-28 21:35:38 erwan_lemonnier Exp $
+#   $Id: Contract.pm,v 1.31 2009-06-01 20:43:06 erwan_lemonnier Exp $
 #
 
 package Sub::Contract;
@@ -160,7 +160,10 @@ sub reset {
     $self->{pre}         = undef;        # Coderef checking pre conditions
     $self->{post}        = undef;        # Coderef checking post conditions
     $self->{invariant}   = undef;        # Coderef checking an invariant condition
-    delete $self->{cache};
+    if (exists $self->{cache}) {
+	$self->{cache}->clear;
+	delete $self->{cache};
+    }
     return $self;
 }
 
@@ -1057,7 +1060,7 @@ Please submit bugs to rt.cpan.org.
 
 =head1 VERSION
 
-$Id: Contract.pm,v 1.30 2008-08-28 21:35:38 erwan_lemonnier Exp $
+$Id: Contract.pm,v 1.31 2009-06-01 20:43:06 erwan_lemonnier Exp $
 
 =head1 AUTHORS
 
