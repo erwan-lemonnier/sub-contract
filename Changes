@@ -43,5 +43,9 @@ Revision history for Perl extension Sub::Contract
 0.09  2008-06-18
         - fix shared cache bug
 
-0.10  
+0.10  2009-06-02
+        - Sub::Contract now uses its own cache implementation to improve speed
+        - changed the cache API - BROKE BACKWARD COMPATIBILITY
+        - added is_not(), is_one_of(), is_all_of()
+	- renamed undef_or() and defined_and()
         - pod++
