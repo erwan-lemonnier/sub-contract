@@ -2,7 +2,7 @@
 #
 #   Sub::Contract - Programming by contract and memoizing in one
 #
-#   $Id: Contract.pm,v 1.32 2009-06-03 04:40:12 erwan_lemonnier Exp $
+#   $Id: Contract.pm,v 1.33 2009-06-03 18:54:05 erwan_lemonnier Exp $
 #
 
 package Sub::Contract;
@@ -943,10 +943,9 @@ methods:
 
 Enable memoization of the contractor's results. Return the contract.
 
-The cache itself is implemented as an instance of Cache::Memory.  If
-C<size> is set, the maximum memory size of the underlying instance of
-Cache::Memory is set to C<$s> bytes. If C<size> is omitted, this
-maximum cache size defaults to 10 mega bytes.
+The cache itself is implemented as a hash of at most C<size>
+entries. If C<size> is omitted, the maximum cache size defaults to
+10000 entries.
 
 =item C<< $contract->clear_cache >>
 
@@ -959,7 +958,7 @@ Return 1 if the contractor is memoized. Return 0 if not.
 
 =item C<< $contract->get_cache >>
 
-Return the underlying Cache object used to cache this contract's
+Return the underlying hash table used to cache this contract's
 contractor. Return undef if the contractor is not memoized.
 
 =item C<< $contract->add_to_cache(\@args,\@results) >>
@@ -1147,7 +1146,7 @@ Please submit bugs to rt.cpan.org.
 
 =head1 VERSION
 
-$Id: Contract.pm,v 1.32 2009-06-03 04:40:12 erwan_lemonnier Exp $
+$Id: Contract.pm,v 1.33 2009-06-03 18:54:05 erwan_lemonnier Exp $
 
 =head1 AUTHORS
 

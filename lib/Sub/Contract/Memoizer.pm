@@ -2,7 +2,7 @@
 #
 #   Sub::Contract::Memoizer - Implement the memoizing behaviour of a contract
 #
-#   $Id: Memoizer.pm,v 1.9 2009-06-01 20:43:06 erwan_lemonnier Exp $
+#   $Id: Memoizer.pm,v 1.10 2009-06-03 18:54:05 erwan_lemonnier Exp $
 #
 
 package Sub::Contract::Memoizer;
@@ -75,7 +75,7 @@ END {
 
 sub cache {
     my ($self,%args) = @_;
-    my $size = delete $args{size} || 1000000; # default size 1000000 elements
+    my $size = delete $args{size} || 10000; # default size 10000 elements
 
     croak "cache() got unknown arguments: ".Dumper(%args) if (%args);
     croak "size should be a number" if (!defined $size || $size !~ /^\d+$/);
@@ -167,7 +167,7 @@ See 'Sub::Contract'.
 
 =head1 VERSION
 
-$Id: Memoizer.pm,v 1.9 2009-06-01 20:43:06 erwan_lemonnier Exp $
+$Id: Memoizer.pm,v 1.10 2009-06-03 18:54:05 erwan_lemonnier Exp $
 
 =head1 AUTHOR
 
