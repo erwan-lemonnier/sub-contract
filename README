@@ -23,6 +23,7 @@ First of all, you should define a library of pseudo-type constraints. A type con
     sub is_account_number { ... }
     sub is_amount         { ... }
     # and so on...
+    
 To contract a function 'surface' that takes a list of 2 integers and returns 1 integer:
 
     use Sub::Contract qw(contract);
@@ -37,6 +38,7 @@ To contract a function 'surface' that takes a list of 2 integers and returns 1 i
         # just implement the logic:
         return $_[0] * $_[1];
     }
+    
 Since the result of 'surface' is a function of its input arguments only, we may want to memoize (cache) it:
 
     contract('surface')
@@ -44,6 +46,7 @@ Since the result of 'surface' is a function of its input arguments only, we may 
         ->out(\&is_integer)
         ->cache
         ->enable;
+        
 If 'surface' took a hash of 2 integers instead, with the keys 'height' and 'width':
 
     use Sub::Contract qw(contract);
@@ -57,6 +60,7 @@ If 'surface' took a hash of 2 integers instead, with the keys 'height' and 'widt
         my %args = @_;
         return $args{height}* $args{width};
     }
+    
 Of course, a real life example is more likly to look like:
 
     use Sub::Contract qw(contract is_a);
@@ -77,6 +81,7 @@ Of course, a real life example is more likly to look like:
     $account1->send_money( to => $account2,
                            amount => 1000,
                            date => "2008-06-16" );
+                           
 To make an argument of return value free of constraint, just set its constraint to undef:
 
     contract("send_money")
@@ -85,6 +90,7 @@ To make an argument of return value free of constraint, just set its constraint 
               amount => undef,  # amount may be whatever
               date => \&is_date )
          ->enable;
+         
 You can also declare invariants, pre- and post-conditions as in usual contract programming implementations:
 
     contract('foo')
@@ -92,6 +98,7 @@ You can also declare invariants, pre- and post-conditions as in usual contract p
          ->post( \&validate_state_after )
          ->invariant( \&validate_state )
          ->enable;
+         
 To turn off all contracts within namespaces matching '^My::Account::.*$'
 
     use Sub::Contract::Pool qw(get_contract_pool);
@@ -100,6 +107,7 @@ To turn off all contracts within namespaces matching '^My::Account::.*$'
     foreach my $contract ($pool->find_contracts_matching("My::Account::.*")) {
         $contract->disable;
     }
+    
 You may list contracts during runtime, modify them and recompile them dynamically, or just turn them off. See 'Sub::Contract::Pool' for details.
 
 # DESCRIPTION
