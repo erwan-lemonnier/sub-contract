@@ -81,7 +81,7 @@ test_contract(
 	      [ b => 1, a => 4 ], 5, undef,
 	      [ a => undef, b => 4 ], 4, undef,
 	      [ a => undef, b => undef ], undef, "input argument of Bob::add with key 'b' fails its constraint",
-	      [ a => 'abc', b => undef ], undef, "input argument of Bob::add with key 'a' fails its constraint",
+	      [ a => 'abc', b => 4 ], undef, "input argument of Bob::add with key 'a' fails its constraint",
 	      );
 
 
